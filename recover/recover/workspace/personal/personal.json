@@ -1,0 +1,94 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"LurP-5resV\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Personal</span>\",\"col\":12}},{\"id\":\"UTlHc6TgjW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Training\",\"col\":3}},{\"id\":\"Po3abBW5sE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Request\",\"col\":3}},{\"id\":\"tCCioOUDrf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pay Request\",\"col\":3}},{\"id\":\"7hhMC5iYAW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Loan Application\",\"col\":3}},{\"id\":\"PU4q-HCcHa\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"kRVvKnP2nF\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Leave Application\",\"col\":3}},{\"id\":\"u9WcNQRxdR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance Request\",\"col\":3}},{\"id\":\"dJZhUxbTZC\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0639\u0647\u062f\u0629\",\"col\":3}},{\"id\":\"Jjcsrfyy3v\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u062a\u0633\u0648\u064a\u0629 \u0627\u0644\u0639\u0647\u062f\u0647\",\"col\":3}}]",
+ "creation": "2024-12-24 11:15:10.763526",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "share-people",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Personal",
+ "links": [],
+ "modified": "2025-02-01 15:08:16.396644",
+ "modified_by": "Administrator",
+ "module": "Recover",
+ "name": "Personal",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 9.0,
+ "shortcuts": [
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "System Training",
+   "link_to": "Video",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Material Request",
+   "link_to": "Material Request",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Pay Request",
+   "link_to": "Pay Request",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u062a\u0633\u0648\u064a\u0629 \u0627\u0644\u0639\u0647\u062f\u0647",
+   "link_to": "Expense Claim",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0639\u0647\u062f\u0629",
+   "link_to": "Employee Advance",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Attendance Request",
+   "link_to": "Attendance Request",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Loan Application",
+   "link_to": "Loan Application",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Leave Application",
+   "link_to": "Leave Application",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Personal"
+}

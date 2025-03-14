@@ -1,0 +1,91 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"3owp_2S5va\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Contract Managment</span>\",\"col\":12}},{\"id\":\"CZnvRwG1FF\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Project\",\"col\":3}},{\"id\":\"7ygD1aG-a_\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0639\u0642\u0648\u062f \u0627\u0644\u0627\u064a\u062c\u0627\u0631\",\"col\":3}},{\"id\":\"ozDH3Hcu2G\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Issue\",\"col\":3}},{\"id\":\"tmM4qdieCd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0635\u0631\u0641 \u0645\u0648\u0627\u062f \u0644\u0644\u0645\u0634\u0627\u0631\u064a\u0639\",\"col\":3}},{\"id\":\"pZ3fnYG6nY\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"o_fzUxrDyC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Project Reports</b></span>\",\"col\":12}},{\"id\":\"6rkcTZjr9a\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delayed Tasks Summary\",\"col\":3}},{\"id\":\"mWjYR1QE1J\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Issue Analytics\",\"col\":3}},{\"id\":\"px1pCqNoxH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Issue Summary\",\"col\":3}}]",
+ "creation": "2025-01-10 15:14:01.190402",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "color-energy-points",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Contract Managment",
+ "links": [],
+ "modified": "2025-01-10 15:41:10.684246",
+ "modified_by": "Administrator",
+ "module": "Recover",
+ "name": "Contract Managment",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "CEO"
+  },
+  {
+   "role": "Accounts Manager"
+  }
+ ],
+ "sequence_id": 3.0,
+ "shortcuts": [
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "format": "{} Open",
+   "label": "Project",
+   "link_to": "Project",
+   "stats_filter": "[[\"Project\",\"status\",\"=\",\"Open\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Delayed Tasks Summary",
+   "link_to": "Delayed Tasks Summary",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0639\u0642\u0648\u062f \u0627\u0644\u0627\u064a\u062c\u0627\u0631",
+   "link_to": "Rent Contract",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0635\u0631\u0641 \u0645\u0648\u0627\u062f \u0644\u0644\u0645\u0634\u0627\u0631\u064a\u0639",
+   "link_to": "Stock Entry",
+   "stats_filter": "[[\"Stock Entry\",\"stock_entry_type\",\"=\",\"Material Issue\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Issue Analytics",
+   "link_to": "Issue Analytics",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Issue",
+   "link_to": "Issue",
+   "stats_filter": "[[\"Issue\",\"status\",\"=\",\"Open\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Issue Summary",
+   "link_to": "Issue Summary",
+   "type": "Report"
+  }
+ ],
+ "title": "Contract Managment"
+}

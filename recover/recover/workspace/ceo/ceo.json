@@ -1,0 +1,189 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"7CfIYFIRp2\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Outgoing Bills\",\"col\":3}},{\"id\":\"vcE_8Oo_1C\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Customer Outstanding\",\"col\":3}},{\"id\":\"rBbvK0kRbA\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Incoming Bills\",\"col\":3}},{\"id\":\"Yoik9TFsed\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Supplier Outstanding\",\"col\":3}},{\"id\":\"VPipxkkH3G\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sales Management</span>\",\"col\":12}},{\"id\":\"34ZsFZdQuy\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Opportunity\",\"col\":3}},{\"id\":\"-z2_wz7DGJ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cost Sheet\",\"col\":3}},{\"id\":\"-DhiCA-Y4i\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quotation\",\"col\":3}},{\"id\":\"CAuXj8RK6R\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"R28eFTd1ra\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order\",\"col\":3}},{\"id\":\"lAeArrmmmI\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Invoice\",\"col\":3}},{\"id\":\"kMgQDOgQQo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"iAVZtAd2tm\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mg9niLg0Ps\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Purchase Management</b></span>\",\"col\":12}},{\"id\":\"UaCx5q0lya\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier\",\"col\":3}},{\"id\":\"kQgXWK-zCQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order\",\"col\":3}},{\"id\":\"lg0z4b5uN5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Invoice\",\"col\":3}},{\"id\":\"YqydK7iJGa\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Stock Management</b></span>\",\"col\":12}},{\"id\":\"2s0aZ3axl7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Request\",\"col\":3}},{\"id\":\"IJva1lYHu5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u0645\u062e\u0632\u0646\",\"col\":3}},{\"id\":\"ZuqTAZLHb6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Receipt\",\"col\":3}},{\"id\":\"FmMQ_LlyaL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Note\",\"col\":3}},{\"id\":\"_IrgD4Ht-a\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"PgnBEFldmR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pay Request\",\"col\":3}},{\"id\":\"45loKUraOC\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0637\u0644\u0628 \u0639\u0647\u062f\u0647\",\"col\":3}},{\"id\":\"ha365Q3gRj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u062a\u0635\u0641\u064a\u0629 \u0627\u0644\u0639\u0647\u062f\u0647\",\"col\":3}},{\"id\":\"QOdtK5LUX-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Trip\",\"col\":3}}]",
+ "creation": "2024-12-30 11:46:17.702204",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "color-review-points",
+ "idx": 10,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "CEO",
+ "links": [],
+ "modified": "2025-01-31 14:44:42.516553",
+ "modified_by": "Administrator",
+ "module": "Recover",
+ "name": "CEO",
+ "number_cards": [
+  {
+   "label": "Total Outgoing Bills",
+   "number_card_name": "Total Outgoing Bills"
+  },
+  {
+   "label": "Customer Outstanding",
+   "number_card_name": "Sum of Outstanding-1"
+  },
+  {
+   "label": "Total Incoming Bills",
+   "number_card_name": "Total Incoming Bills"
+  },
+  {
+   "label": "Supplier Outstanding",
+   "number_card_name": "Sum of Outstanding"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "CEO"
+  }
+ ],
+ "sequence_id": 2.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Pay Request",
+   "link_to": "Pay Request",
+   "stats_filter": "[[\"Pay Request\",\"workflow_state\",\"=\",\"Pending CEO\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0637\u0644\u0628 \u0639\u0647\u062f\u0647",
+   "link_to": "Employee Advance",
+   "stats_filter": "[[\"Employee Advance\",\"workflow_state\",\"=\",\"Pending CEO\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Quotation",
+   "link_to": "Quotation",
+   "stats_filter": "[[\"Quotation\",\"workflow_state\",\"=\",\"Pending\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Cost Sheet",
+   "link_to": "Cost sheet",
+   "stats_filter": "[[\"Cost sheet\",\"workflow_state\",\"=\",\"Pending Confirmation\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Opportunity",
+   "link_to": "Opportunity",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Delivery Trip",
+   "link_to": "Delivery Trip",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "format": "{} Open",
+   "label": "Material Request",
+   "link_to": "Material Request",
+   "stats_filter": "[[\"Material Request\",\"workflow_state\",\"=\",\"Pending Confirmation\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "format": "{} Open",
+   "label": "\u062d\u0631\u0643\u0627\u062a \u0627\u0644\u0645\u062e\u0632\u0646",
+   "link_to": "Stock Entry",
+   "stats_filter": "[[\"Stock Entry\",\"workflow_state\",\"=\",\"Pending CEO\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Item",
+   "link_to": "Item",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u062a\u0635\u0641\u064a\u0629 \u0627\u0644\u0639\u0647\u062f\u0647",
+   "link_to": "Expense Claim",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Delivery Note",
+   "link_to": "Delivery Note",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Sales Order",
+   "link_to": "Sales Order",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Sales Invoice",
+   "link_to": "Sales Invoice",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Supplier",
+   "link_to": "Supplier",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purchase Order",
+   "link_to": "Purchase Order",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purchase Receipt",
+   "link_to": "Purchase Receipt",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purchase Invoice",
+   "link_to": "Purchase Invoice",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "CEO"
+}

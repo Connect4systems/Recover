@@ -1,0 +1,136 @@
+{
+ "charts": [
+  {
+   "chart_name": "Profit and Loss",
+   "label": "Profit and Loss"
+  }
+ ],
+ "content": "[{\"id\":\"CYTK5b741U\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Profit and Loss\",\"col\":12}},{\"id\":\"45CPNdrO2F\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Annual Sales\",\"col\":4}},{\"id\":\"RcNwWw3ntu\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Annual Purchase\",\"col\":4}},{\"id\":\"AGrczGj3Kg\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Outgoing Payment\",\"col\":4}},{\"id\":\"YDXcS4SiOr\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"D3C_CvgeQX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Accounts\",\"col\":3}},{\"id\":\"p2z5cv7pO6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Expense Claims\",\"col\":3}},{\"id\":\"zAoEzaKz5z\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Project\",\"col\":3}},{\"id\":\"_CxMmvSu-4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock\",\"col\":3}},{\"id\":\"HYkKZ4i_Pp\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"PsGmGRbQeL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Human Resource\",\"col\":3}},{\"id\":\"PEO5hG-XMB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Selling\",\"col\":3}},{\"id\":\"VC2s9FDcTP\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Attendance\",\"col\":3}},{\"id\":\"4PDV2Y4f5U\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payroll\",\"col\":3}},{\"id\":\"gC2j1A-K-j\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Gross Profit\",\"col\":3}},{\"id\":\"o8wTIV0oRc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Gross And Net Profit Report\",\"col\":3}},{\"id\":\"L24h8PR7gf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Balance\",\"col\":3}},{\"id\":\"stpwKPAqje\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Ledger\",\"col\":3}}]",
+ "creation": "2025-01-10 15:24:56.622866",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "image-view",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Reports",
+ "links": [],
+ "modified": "2025-02-04 12:29:07.348965",
+ "modified_by": "Administrator",
+ "module": "Recover",
+ "name": "Reports",
+ "number_cards": [
+  {
+   "label": "Annual Sales",
+   "number_card_name": "Annual Sales"
+  },
+  {
+   "label": "Annual Purchase",
+   "number_card_name": "Annual Purchase"
+  },
+  {
+   "label": "Total Outgoing Payment",
+   "number_card_name": "Total Outgoing Payment"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "CEO"
+  }
+ ],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Project",
+   "link_to": "Project",
+   "type": "Dashboard"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Human Resource",
+   "link_to": "Human Resource",
+   "type": "Dashboard"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Stock Balance",
+   "link_to": "Stock Balance",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Gross Profit",
+   "link_to": "Gross Profit",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Accounts",
+   "link_to": "Accounts",
+   "type": "Dashboard"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "General Ledger",
+   "link_to": "General Ledger",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Selling",
+   "link_to": "Selling",
+   "type": "Dashboard"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Expense Claims",
+   "link_to": "Expense Claims",
+   "type": "Dashboard"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Gross And Net Profit Report",
+   "link_to": "Gross and Net Profit Report",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Stock",
+   "link_to": "Stock",
+   "type": "Dashboard"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Attendance",
+   "link_to": "Attendance",
+   "type": "Dashboard"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Payroll",
+   "link_to": "Payroll",
+   "type": "Dashboard"
+  }
+ ],
+ "title": "Reports"
+}

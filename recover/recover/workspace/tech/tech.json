@@ -1,0 +1,42 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"-b_23v2pZv\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tech</span>\",\"col\":12}},{\"id\":\"jpO7z3ke5K\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Task\",\"col\":3}}]",
+ "creation": "2025-01-09 20:47:43.769045",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "solid-info",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Tech",
+ "links": [],
+ "modified": "2025-01-11 14:34:27.655082",
+ "modified_by": "Administrator",
+ "module": "Recover",
+ "name": "Tech",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Maintenance User"
+  }
+ ],
+ "sequence_id": 6.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Task",
+   "link_to": "Task",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Tech"
+}

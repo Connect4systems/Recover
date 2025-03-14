@@ -1,0 +1,112 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"7Yp6wiu2-r\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Technical</span>\",\"col\":12}},{\"id\":\"YETnr1DOp_\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Issue\",\"col\":3}},{\"id\":\"sKFs2fqSzn\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Project\",\"col\":3}},{\"id\":\"U1gCmnKfZ9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Task\",\"col\":3}},{\"id\":\"_uCKE3g9XC\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order\",\"col\":3}},{\"id\":\"jHGOm_q6w0\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"44XjiI_5NA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Entry\",\"col\":3}},{\"id\":\"Pry6gA6IQ_\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Balance\",\"col\":3}},{\"id\":\"SEQxTE6K2L\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"HDQumE5Q0w\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports and Dashboard</b></span>\",\"col\":12}},{\"id\":\"0qW72v-EYV\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delayed Tasks Summary\",\"col\":3}},{\"id\":\"gdnGIrpKpi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Issue Summary\",\"col\":3}},{\"id\":\"9ItmGuf3Zi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Auto Repeat\",\"col\":3}},{\"id\":\"Lk_paIk-TI\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pay Request\",\"col\":3}}]",
+ "creation": "2024-12-27 12:59:42.022640",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "quantity-1",
+ "idx": 1,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Technical",
+ "links": [],
+ "modified": "2025-01-30 14:36:35.786027",
+ "modified_by": "Administrator",
+ "module": "Recover",
+ "name": "Technical",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Maintenance Manager"
+  }
+ ],
+ "sequence_id": 5.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Sales Order",
+   "link_to": "Sales Order",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Auto Repeat",
+   "link_to": "Auto Repeat",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Stock Entry",
+   "link_to": "Stock Entry",
+   "stats_filter": "[[\"Stock Entry\",\"stock_entry_type\",\"=\",\"Material Issue\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Issue Summary",
+   "link_to": "Issue Summary",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Delayed Tasks Summary",
+   "link_to": "Delayed Tasks Summary",
+   "type": "Report"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "format": "{} Open",
+   "label": "Pay Request",
+   "link_to": "Pay Request",
+   "stats_filter": "[[\"Pay Request\",\"workflow_state\",\"=\",\"Pending Technical Manager\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Stock Balance",
+   "link_to": "Stock Balance",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Issue",
+   "link_to": "Issue",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Project",
+   "link_to": "Project",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Task",
+   "link_to": "Task",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Technical"
+}
