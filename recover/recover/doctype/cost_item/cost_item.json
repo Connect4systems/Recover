@@ -9,6 +9,8 @@
   "item",
   "item_name",
   "item_group",
+  "opportunity_item",
+  "qty",
   "price",
   "other_cost",
   "total_cost",
@@ -41,6 +43,19 @@
    "in_preview": 1,
    "label": "Item Group",
    "options": "Item Group"
+  },
+  {
+   "fieldname": "opportunity_item",
+   "fieldtype": "Link",
+   "label": "Opportunity Item",
+   "options": "Opportunity Item"
+  },
+  {
+   "default": "1",
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Qty"
   },
   {
    "fieldname": "price",

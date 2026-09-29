@@ -10,5 +10,14 @@ frappe.ui.form.on("Cost sheet", {
 				filters: { item_group: row.item_group },
 			};
 		});
+		frm.set_query("opportunity_item", "items", function () {
+			return {
+				filters: {
+					parent: frm.doc.opportunity,
+					parenttype: "Opportunity",
+					parentfield: "items",
+				},
+			};
+		});
 	},
 });
