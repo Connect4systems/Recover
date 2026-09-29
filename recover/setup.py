@@ -33,9 +33,9 @@ def setup_custom_fields():
 		],
 	})
 
-	if not frappe.get_meta("Supplier").has_field("custom_item_group"):
+	if not frappe.get_meta("Supplier").has_field("custom_supplier_item_group"):
 		create_custom_fields({"Supplier": [{
-			"fieldname": "custom_item_group",
+			"fieldname": "custom_supplier_item_group",
 			"label": "Item Groups",
 			"fieldtype": "Table",
 			"options": "Supplier Item Group",

@@ -128,13 +128,14 @@ class CostWorkflowTests(unittest.TestCase):
         self.sheet.on_submit()
         self.frappe.new_doc.assert_not_called()
 
-    def test_supplier_filter_uses_custom_item_group_table(self):
+    def test_supplier_filter_uses_custom_supplier_item_group_table(self):
         supplier_meta = Mock()
         supplier_meta.get_field.return_value = Row(fieldtype="Table", options="Supplier Item Group")
         child_meta = Row(fields=[Row(fieldname="item_greoup", fieldtype="Link", options="Item Group")])
         self.frappe.get_meta.side_effect = lambda dt: supplier_meta if dt == "Supplier" else child_meta
         self.assertEqual(self.controller.get_item_group_suppliers("Equipment"), ["SUP-1"])
-        self.assertEqual(self.frappe.get_all.call_args.kwargs["filters"], {"item_greoup": "Equipment", "parenttype": "Supplier", "parentfield": "custom_item_group"})
+        supplier_meta.get_field.assert_called_once_with("custom_supplier_item_group")
+        self.assertEqual(self.frappe.get_all.call_args.kwargs["filters"], {"item_greoup": "Equipment", "parenttype": "Supplier", "parentfield": "custom_supplier_item_group"})
 
     def test_supplier_filter_supports_direct_item_group_link(self):
         meta = Mock()
@@ -142,7 +143,18 @@ class CostWorkflowTests(unittest.TestCase):
         self.frappe.get_meta.side_effect = None
         self.frappe.get_meta.return_value = meta
         self.controller.get_item_group_suppliers("Equipment")
-        self.assertEqual(self.frappe.get_all.call_args.kwargs["filters"], {"custom_item_group": "Equipment"})
+        self.assertEqual(self.frappe.get_all.call_args.kwargs["filters"], {"custom_supplier_item_group": "Equipment"})
+
+    def test_supplier_search_returns_only_enabled_matching_suppliers(self):
+        self.frappe.get_list = Mock(return_value=[Row(name="SUP-1", supplier_name="Matching supplier")])
+        with patch.object(self.controller, "get_item_group_suppliers", return_value=["SUP-1", "SUP-2"]):
+            result = self.controller.get_suppliers_for_item_group("Supplier", "Match", "name", 0, 20, {"item_group": "Equipment"})
+        self.assertEqual(result, [["SUP-1", "Matching supplier"]])
+        self.assertEqual(self.frappe.get_list.call_args.kwargs["filters"], {"name": ["in", ["SUP-1", "SUP-2"]], "disabled": 0})
+
+    def test_supplier_search_with_no_matching_groups_returns_empty(self):
+        with patch.object(self.controller, "get_item_group_suppliers", return_value=[]):
+            self.assertEqual(self.controller.get_suppliers_for_item_group("Supplier", "", "name", 0, 20, {"item_group": "Equipment"}), [])
 
     def test_item_code_is_explicitly_mapped_separately_from_name(self):
         self.requests.make_cost_sheet("PR-1")

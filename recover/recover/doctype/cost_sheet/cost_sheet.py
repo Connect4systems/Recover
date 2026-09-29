@@ -76,16 +76,16 @@ def get_suppliers_for_item_group(doctype, txt, searchfield, start, page_len, fil
 
 
 def get_item_group_suppliers(item_group):
-	field = frappe.get_meta("Supplier").get_field("custom_item_group")
+	field = frappe.get_meta("Supplier").get_field("custom_supplier_item_group")
 	if not field:
-		frappe.throw(frappe._("Configure Supplier.custom_item_group before selecting suppliers."))
+		frappe.throw(frappe._("Configure Supplier.custom_supplier_item_group before selecting suppliers."))
 	if field.fieldtype == "Link" and field.options == "Item Group":
-		return frappe.get_all("Supplier", filters={"custom_item_group": item_group}, pluck="name")
+		return frappe.get_all("Supplier", filters={"custom_supplier_item_group": item_group}, pluck="name")
 	if field.fieldtype in ("Table", "Table MultiSelect"):
 		meta = frappe.get_meta(field.options)
 		group_field = next((f.fieldname for f in meta.fields if f.fieldtype == "Link" and f.options == "Item Group"), None)
 		if group_field:
 			return frappe.get_all(field.options, filters={
-				group_field: item_group, "parenttype": "Supplier", "parentfield": "custom_item_group",
+				group_field: item_group, "parenttype": "Supplier", "parentfield": "custom_supplier_item_group",
 			}, pluck="parent")
-	frappe.throw(frappe._("Supplier.custom_item_group must link to Item Group or contain an Item Group table."))
+	frappe.throw(frappe._("Supplier.custom_supplier_item_group must link to Item Group or contain an Item Group table."))
