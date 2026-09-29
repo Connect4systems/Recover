@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"IzUK30oZxB\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Stock Manager</span>\",\"col\":12}},{\"id\":\"tc8pQ9PB5O\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Note\",\"col\":3}},{\"id\":\"5onSWvBXCb\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Receipt\",\"col\":3}},{\"id\":\"Nnsoy28_nx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Request\",\"col\":3}},{\"id\":\"AHTUi0KMUe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Reconciliation\",\"col\":3}},{\"id\":\"k_6xh8SUoj\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"PVLNYVCoA-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Balance\",\"col\":3}},{\"id\":\"p9Rg1KyFh4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Entry\",\"col\":3}},{\"id\":\"jcxwjfqGoe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"MT4CQm80FA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Ledger\",\"col\":3}}]",
+ "content": "[{\"id\":\"hbQP6TDNih\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order To recept\",\"col\":3}},{\"id\":\"Nl1OhVm4R-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Invoice\",\"col\":3}},{\"id\":\"IzUK30oZxB\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Stock Manager</span>\",\"col\":12}},{\"id\":\"tc8pQ9PB5O\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Note\",\"col\":3}},{\"id\":\"5onSWvBXCb\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Receipt\",\"col\":3}},{\"id\":\"Nnsoy28_nx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Request\",\"col\":3}},{\"id\":\"AHTUi0KMUe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Reconciliation\",\"col\":3}},{\"id\":\"k_6xh8SUoj\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"PVLNYVCoA-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Balance\",\"col\":3}},{\"id\":\"p9Rg1KyFh4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Entry\",\"col\":3}},{\"id\":\"jcxwjfqGoe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"MT4CQm80FA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Ledger\",\"col\":3}}]",
  "creation": "2024-12-21 14:23:56.584867",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Stock Manager",
  "links": [],
- "modified": "2025-01-30 14:21:30.849389",
+ "modified": "2026-09-26 15:59:03.104677",
  "modified_by": "Administrator",
  "module": "Recover",
  "name": "Stock Manager",
@@ -27,13 +27,30 @@
    "role": "Stock Manager"
   }
  ],
- "sequence_id": 8.0,
+ "sequence_id": 16.0,
  "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purchase Order To recept",
+   "link_to": "Purchase Order",
+   "stats_filter": "[[\"Purchase Order\",\"status\",\"in\",[\"To Receive and Bill\",\"To Receive\",null],false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Purchase Invoice",
+   "link_to": "Purchase Invoice",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
   {
    "color": "Grey",
    "doc_view": "List",
    "label": "Stock Balance",
    "link_to": "Stock Balance",
+   "report_ref_doctype": "Stock Ledger Entry",
    "type": "Report"
   },
   {
@@ -82,6 +99,7 @@
    "doc_view": "List",
    "label": "Stock Ledger",
    "link_to": "Stock Ledger",
+   "report_ref_doctype": "Stock Ledger Entry",
    "type": "Report"
   },
   {

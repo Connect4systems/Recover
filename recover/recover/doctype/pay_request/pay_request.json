@@ -103,7 +103,7 @@
    "fieldname": "payment_account",
    "fieldtype": "Link",
    "label": "Payment Account",
-   "link_filters": "[[\"Account\",\"account_number\",\"in\",[\"120501\",\"120413\",\"120414\"]]]",
+   "link_filters": "[[\"Account\",\"account_number\",\"in\",[\"120501\",\"120413\",\"120414\",\"120416\"]]]",
    "options": "Account",
    "reqd": 1
   },
@@ -116,6 +116,7 @@
    "read_only": 1
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [
@@ -124,7 +125,7 @@
    "link_fieldname": "custom_pay_request"
   }
  ],
- "modified": "2025-01-26 16:52:30.054239",
+ "modified": "2026-06-25 11:35:27.940478",
  "modified_by": "Administrator",
  "module": "Recover",
  "name": "Pay Request",
@@ -192,6 +193,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
