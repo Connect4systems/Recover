@@ -1,0 +1,117 @@
+{
+ "doctype": "DocType",
+ "name": "Price Sheet Item",
+ "module": "Recover",
+ "engine": "InnoDB",
+ "field_order": [
+  "item",
+  "item_name",
+  "description",
+  "uom",
+  "qty",
+  "price",
+  "other_cost",
+  "total_cost",
+  "profit",
+  "selling_price",
+  "supplier",
+  "cost_sheet_item",
+  "opportunity_item"
+ ],
+ "fields": [
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item",
+   "reqd": 1,
+   "in_list_view": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "label": "Quantity",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "label": "Unit Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "other_cost",
+   "fieldtype": "Currency",
+   "label": "Other Unit Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_cost",
+   "fieldtype": "Currency",
+   "label": "Unit Total Cost",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "profit",
+   "fieldtype": "Currency",
+   "label": "Unit Profit",
+   "in_list_view": 1,
+   "default": "0"
+  },
+  {
+   "fieldname": "selling_price",
+   "fieldtype": "Currency",
+   "label": "Unit Selling Price",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cost_sheet_item",
+   "fieldtype": "Data",
+   "label": "Cost Sheet Item Reference",
+   "read_only": 1
+  },
+  {
+   "fieldname": "opportunity_item",
+   "fieldtype": "Data",
+   "label": "Opportunity Item Reference",
+   "read_only": 1
+  }
+ ],
+ "permissions": [],
+ "actions": [],
+ "links": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "istable": 1,
+ "editable_grid": 1
+}

@@ -121,8 +121,8 @@
  "is_submittable": 1,
  "links": [
   {
-   "link_doctype": "Quotation",
-   "link_fieldname": "custom_cost_sheet"
+   "link_doctype": "Price Sheet",
+   "link_fieldname": "cost_sheet"
   }
  ],
  "make_attachments_public": 1,

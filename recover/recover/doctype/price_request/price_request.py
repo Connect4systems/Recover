@@ -25,12 +25,8 @@ def make_price_request(source_name, target_doc=None):
 	return get_mapped_doc("Opportunity", source_name, {
 		"Opportunity": {
 			"doctype": "Price Request",
-			"field_no_map": ["naming_series", "amended_from"],
+			"field_no_map": ["naming_series", "amended_from", "items"],
 			"field_map": {"name": "opportunity", "opportunity_from": "party_type", "party_name": "party"},
-		},
-		"Opportunity Item": {
-			"doctype": "Pricing Items",
-			"field_map": {"name": "opportunity_item", "item_code": "item"},
 		},
 	}, target_doc)
 
@@ -59,5 +55,5 @@ def make_cost_sheet(source_name, target_doc=None):
 			"field_no_map": ["naming_series", "amended_from"],
 			"field_map": {"name": "price_request"},
 		},
-		"Pricing Items": {"doctype": "Cost Item", "field_map": {"name": "price_request_item"}},
+		"Pricing Items": {"doctype": "Cost Item", "field_map": {"name": "price_request_item", "item": "item", "item_name": "item_name", "description": "description", "uom": "uom", "qty": "qty"}},
 	}, target_doc, populate)

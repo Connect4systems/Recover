@@ -1,0 +1,136 @@
+{
+ "doctype": "DocType",
+ "name": "Price Sheet",
+ "module": "Recover",
+ "engine": "InnoDB",
+ "field_order": [
+  "opportunity",
+  "cost_sheet",
+  "party_type",
+  "party",
+  "date",
+  "items",
+  "total",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "opportunity",
+   "fieldtype": "Link",
+   "label": "Opportunity",
+   "options": "Opportunity",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "cost_sheet",
+   "fieldtype": "Link",
+   "label": "Cost Sheet",
+   "options": "Cost sheet",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Link",
+   "label": "Party Type",
+   "options": "DocType",
+   "read_only": 1
+  },
+  {
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "label": "Party",
+   "options": "party_type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "default": "Today",
+   "reqd": 1
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Price Sheet Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total Selling Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Price Sheet",
+   "read_only": 1,
+   "no_copy": 1
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "submit": 1,
+   "print": 1,
+   "report": 1
+  },
+  {
+   "role": "Sales User",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "submit": 1,
+   "print": 1,
+   "report": 1
+  },
+  {
+   "role": "Sales Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "submit": 1,
+   "print": 1,
+   "report": 1
+  },
+  {
+   "role": "CEO",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "submit": 1,
+   "print": 1,
+   "report": 1
+  },
+  {
+   "role": "Purchase User",
+   "read": 1,
+   "print": 1
+  },
+  {
+   "role": "Purchase Manager",
+   "read": 1,
+   "print": 1
+  }
+ ],
+ "actions": [],
+ "links": [
+  {
+   "link_doctype": "Quotation",
+   "link_fieldname": "custom_price_sheet"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "is_submittable": 1,
+ "autoname": "format:PS-{YYYY}-{#####}",
+ "track_changes": 1
+}

@@ -26,6 +26,21 @@ function update_sheet_total(frm) {
 }
 
 frappe.ui.form.on("Cost Item", {
+ async item(frm, cdt, cdn) {
+  const row = locals[cdt][cdn];
+  await frappe.model.set_value(cdt, cdn, "supplier", "");
+  if (row.item) {
+   const result = await frappe.db.get_value("Item", row.item, ["item_name", "item_group", "stock_uom", "description"]);
+   if (result.message) {
+    await frappe.model.set_value(cdt, cdn, {
+     item_name: result.message.item_name,
+     item_group: result.message.item_group,
+     uom: result.message.stock_uom,
+     description: result.message.description,
+    });
+   }
+  }
+ },
  price: update_cost_totals,
  other_cost: update_cost_totals,
  qty: update_sheet_total,
