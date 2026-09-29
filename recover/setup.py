@@ -30,12 +30,6 @@ def setup_custom_fields():
 				"insert_after": "rate",
 				"read_only": 1,
 			},
-			{
-				"fieldname": "custom_opportunity_item",
-				"label": "Opportunity Item Reference",
-				"fieldtype": "Data",
-				"read_only": 1,
-			},
 		],
 	})
 

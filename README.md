@@ -8,6 +8,8 @@ mit
 ### Opportunity pricing workflow
 
 1. Save an Opportunity and choose **Create > Price Request**. The request is linked to the opportunity; add the requested items directly in the Price Request.
+Items originate in the Price Request. No opportunity item rows or opportunity-item references are required at any stage; the final quotation links to the Opportunity at document level.
+
 2. Save the Price Request and choose **Create > Cost Sheet**. Item codes, names, descriptions, units, and quantities are copied separately. Purchase User and Purchase Manager can create and submit cost sheets.
 3. Enter each item's unit **Price** and **Other Cost** in the opportunity currency. **Unit Total Cost = Price + Other Cost**. The sheet total sums quantity multiplied by unit total cost.
 4. Select a supplier. Suppliers must be enabled and have the item's group in `Supplier.custom_item_group`. This field can be an Item Group link or a child table containing an Item Group link. Migration creates the table field if it does not already exist; populate it on your suppliers. The older `custom_supplier_item_group` field is not used by this workflow.

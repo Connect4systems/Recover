@@ -15,8 +15,7 @@
   "profit",
   "selling_price",
   "supplier",
-  "cost_sheet_item",
-  "opportunity_item"
+  "cost_sheet_item"
  ],
  "fields": [
   {
@@ -98,12 +97,6 @@
    "fieldname": "cost_sheet_item",
    "fieldtype": "Data",
    "label": "Cost Sheet Item Reference",
-   "read_only": 1
-  },
-  {
-   "fieldname": "opportunity_item",
-   "fieldtype": "Data",
-   "label": "Opportunity Item Reference",
    "read_only": 1
   }
  ],

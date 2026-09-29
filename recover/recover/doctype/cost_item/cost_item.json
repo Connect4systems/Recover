@@ -9,7 +9,6 @@
   "item",
   "item_name",
   "item_group",
-  "opportunity_item",
   "qty",
   "price",
   "other_cost",
@@ -48,12 +47,6 @@
    "label": "Item Group",
    "options": "Item Group",
    "fetch_if_empty": 1
-  },
-  {
-   "fieldname": "opportunity_item",
-   "fieldtype": "Data",
-   "label": "Opportunity Item",
-   "read_only": 1
   },
   {
    "default": "1",

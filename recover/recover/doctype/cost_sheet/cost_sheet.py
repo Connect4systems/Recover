@@ -15,18 +15,12 @@ class Costsheet(Document):
 			request.check_permission("read")
 			if request.docstatus == 2 or request.opportunity != self.opportunity:
 				frappe.throw(frappe._("Cost Sheet must match an active Price Request and its Opportunity."))
-		opportunity = frappe.get_doc("Opportunity", self.opportunity) if self.opportunity else None
-		references = {row.name: row for row in opportunity.items} if opportunity else {}
 		for row in self.items:
 			row.item_group = frappe.get_cached_value("Item", row.item, "item_group")
 			if row.supplier and (row.supplier not in get_item_group_suppliers(row.item_group) or frappe.db.get_value("Supplier", row.supplier, "disabled")):
 				frappe.throw(frappe._("Supplier must be enabled and match the item group."))
 			if flt(row.qty) <= 0:
 				frappe.throw(frappe._("Item quantity must be greater than zero."))
-			if row.opportunity_item:
-				source = references.get(row.opportunity_item)
-				if not source or source.item_code != row.item:
-					frappe.throw(frappe._("Item reference does not match the linked Opportunity."))
 			row.total_cost = flt(flt(row.price) + flt(row.other_cost), row.precision("total_cost"))
 			self.total += row.total_cost * flt(row.qty)
 		self.total = flt(self.total, self.precision("total"))
@@ -48,7 +42,7 @@ class Costsheet(Document):
 		for row in self.items:
 			values = {field: row.get(field) for field in (
 				"item", "item_name", "description", "uom", "qty", "price", "other_cost",
-				"total_cost", "supplier", "opportunity_item",
+				"total_cost", "supplier",
 			)}
 			values.update(cost_sheet_item=row.name, profit=0, selling_price=row.total_cost)
 			price_sheet.append("items", values)

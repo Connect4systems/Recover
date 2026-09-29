@@ -21,7 +21,7 @@ class PriceSheet(Document):
 			if not source or row.cost_sheet_item in seen:
 				frappe.throw(frappe._("Each Price Sheet item must reference a unique Cost Sheet row."))
 			seen.add(row.cost_sheet_item)
-			for field in ("item", "item_name", "description", "uom", "qty", "price", "other_cost", "total_cost", "supplier", "opportunity_item"):
+			for field in ("item", "item_name", "description", "uom", "qty", "price", "other_cost", "total_cost", "supplier"):
 				row.set(field, source.get(field))
 			row.selling_price = flt(flt(row.total_cost) + flt(row.profit), row.precision("selling_price"))
 			self.total += flt(row.qty) * row.selling_price
@@ -63,9 +63,6 @@ def make_quotation(source_name, target_doc=None):
 			"qty": row.qty,
 			"rate": row.selling_price,
 			"custom_cost": row.total_cost,
-			"custom_opportunity_item": row.opportunity_item,
-			"prevdoc_docname": opportunity.name,
-			"prevdoc_doctype": "Opportunity",
 		})
 	quotation.set_missing_values()
 	for item, source in zip(quotation.items, price_sheet.items):

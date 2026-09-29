@@ -11,8 +11,7 @@
   "description",
   "column_break_wvgg",
   "qty",
-  "uom",
-  "opportunity_item"
+  "uom"
  ],
  "fields": [
   {
@@ -57,12 +56,6 @@
    "fieldtype": "Data",
    "label": "Item Name",
    "fetch_if_empty": 1
-  },
-  {
-   "fieldname": "opportunity_item",
-   "fieldtype": "Data",
-   "label": "Opportunity Item Reference",
-   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,

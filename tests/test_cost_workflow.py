@@ -63,7 +63,7 @@ class CostWorkflowTests(unittest.TestCase):
         self.sheet.opportunity = None
         self.sheet.price_request = None
         self.sheet.precision = lambda field: 2
-        self.sheet.items = [Row(name="COST-ROW-1", supplier=None, item="ITEM-1", item_name="Item", qty=3, price=10, other_cost=2.5, total_cost=999, opportunity_item=None, description="Detail", uom="Nos")]
+        self.sheet.items = [Row(name="COST-ROW-1", supplier=None, item="ITEM-1", item_name="Item", qty=3, price=10, other_cost=2.5, total_cost=999, description="Detail", uom="Nos")]
 
     def test_server_recalculates_cost_and_quantity_total(self):
         self.sheet.validate()
@@ -88,16 +88,28 @@ class CostWorkflowTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.sheet.validate()
 
-    def test_foreign_opportunity_reference_is_rejected(self):
-        self.sheet.opportunity = "OPP-1"
-        self.sheet.items[0].opportunity_item = "OTHER-ROW"
-        self.frappe.get_doc.return_value = Row(items=[Row(name="ROW-1", item_code="ITEM-1")])
-        with self.assertRaises(ValueError):
-            self.sheet.validate()
+    def test_cost_mapping_needs_no_opportunity_item_fields(self):
+        self.requests.make_cost_sheet("PR-1")
+        populate = self.mapper.get_mapped_doc.call_args.args[4]
+        source = Row(docstatus=0, opportunity="OPP-1")
+        target = Row(items=[Row(item="CODE-001", item_name="Display name")])
+        self.frappe.get_doc.return_value = Row(opportunity_from="Customer", party_name="CUSTOMER")
+        populate(source, target)
+        self.assertEqual(target.items[0].item, "CODE-001")
+        self.assertEqual(target.party, "CUSTOMER")
+        self.assertFalse(hasattr(target.items[0], "opportunity_item"))
+
+    def test_price_request_validation_needs_no_opportunity_items(self):
+        request = self.requests.PriceRequest()
+        request.opportunity = "OPP-1"
+        request.items = [Row(item="CODE-001")]
+        self.frappe.get_doc.return_value = Row(opportunity_from="Customer", party_name="CUSTOMER")
+        request.validate()
+        self.assertEqual(request.party, "CUSTOMER")
 
     def test_submission_creates_price_sheet_without_opportunity_items(self):
         self.sheet.opportunity = "OPP-1"
-        self.frappe.get_doc.return_value = Row(name="OPP-1", opportunity_from="Customer", party_name="CUSTOMER", items=[])
+        self.frappe.get_doc.return_value = Row(name="OPP-1", opportunity_from="Customer", party_name="CUSTOMER")
         price_sheet = Mock()
         self.frappe.new_doc.return_value = price_sheet
         self.sheet.validate()

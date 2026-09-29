@@ -12,12 +12,6 @@ class PriceRequest(Document):
 			opportunity = frappe.get_doc("Opportunity", self.opportunity)
 			self.party_type = opportunity.opportunity_from
 			self.party = opportunity.party_name
-			references = {row.name: row for row in opportunity.items}
-			for row in self.items:
-				if row.opportunity_item:
-					source = references.get(row.opportunity_item)
-					if not source or source.item_code != row.item:
-						frappe.throw(frappe._("Item reference does not match the linked Opportunity."))
 
 
 @frappe.whitelist()
@@ -40,12 +34,6 @@ def make_cost_sheet(source_name, target_doc=None):
 			opportunity = frappe.get_doc("Opportunity", source.opportunity)
 			target.opportunity_from = opportunity.opportunity_from
 			target.party = opportunity.party_name
-			# Resolve legacy requests only when the item has one unambiguous source row.
-			for row in target.items:
-				if not row.opportunity_item:
-					matches = [item for item in opportunity.items if item.item_code == row.item]
-					if len(matches) == 1:
-						row.opportunity_item = matches[0].name
 		for row in target.items:
 			row.item_group = frappe.get_cached_value("Item", row.item, "item_group")
 
