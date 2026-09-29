@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Price Request", {
 	refresh(frm) {
-		if (frm.is_new() || frm.doc.docstatus === 2) {
+		if (frm.is_new() || frm.doc.docstatus === 2 || !frappe.model.can_create("Cost sheet")) {
 			return;
 		}
 

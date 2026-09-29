@@ -15,7 +15,10 @@
   "other_cost",
   "total_cost",
   "supplier",
-  "supplier_rep"
+  "supplier_rep",
+  "description",
+  "uom",
+  "price_request_item"
  ],
  "fields": [
   {
@@ -33,7 +36,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_preview": 1,
-   "label": "Item Name"
+   "label": "Item Name",
+   "fetch_if_empty": 1
   },
   {
    "fetch_from": "item.item_group",
@@ -42,13 +46,14 @@
    "in_list_view": 1,
    "in_preview": 1,
    "label": "Item Group",
-   "options": "Item Group"
+   "options": "Item Group",
+   "fetch_if_empty": 1
   },
   {
    "fieldname": "opportunity_item",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Opportunity Item",
-   "options": "Opportunity Item"
+   "read_only": 1
   },
   {
    "default": "1",
@@ -76,7 +81,8 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "in_preview": 1,
-   "label": "Total Cost"
+   "label": "Total Cost",
+   "read_only": 1
   },
   {
    "fieldname": "supplier",
@@ -92,6 +98,23 @@
    "in_list_view": 1,
    "in_preview": 1,
    "label": "Supplier Rep"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "options": "UOM",
+   "label": "UOM"
+  },
+  {
+   "fieldname": "price_request_item",
+   "fieldtype": "Data",
+   "label": "Price Request Item Reference",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,

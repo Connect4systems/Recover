@@ -157,7 +157,8 @@
    "role": "Purchase Manager",
    "select": 1,
    "share": 1,
-   "write": 1
+   "write": 1,
+   "submit": 1
   },
   {
    "create": 1,
@@ -172,6 +173,16 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "role": "Purchase User",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "submit": 1,
+   "print": 1,
+   "email": 1,
+   "report": 1
   }
  ],
  "row_format": "Dynamic",

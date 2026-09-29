@@ -242,3 +242,8 @@ app_license = "mit"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+
+
+doctype_js = {"Opportunity": "public/js/opportunity.js"}
+after_install = "recover.setup.setup_custom_fields"
+after_migrate = "recover.setup.setup_custom_fields"

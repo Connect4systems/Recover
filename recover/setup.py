@@ -1,0 +1,31 @@
+from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+
+
+def setup_custom_fields():
+	create_custom_fields({
+		"Quotation": [{
+			"fieldname": "custom_cost_sheet",
+			"label": "Cost Sheet",
+			"fieldtype": "Link",
+			"options": "Cost sheet",
+			"insert_after": "opportunity",
+			"read_only": 1,
+			"no_copy": 1,
+		}],
+		"Quotation Item": [
+			{
+				"fieldname": "custom_cost",
+				"label": "Cost",
+				"fieldtype": "Currency",
+				"options": "currency",
+				"insert_after": "rate",
+				"read_only": 1,
+			},
+			{
+				"fieldname": "custom_opportunity_item",
+				"label": "Opportunity Item Reference",
+				"fieldtype": "Data",
+				"read_only": 1,
+			},
+		],
+	})

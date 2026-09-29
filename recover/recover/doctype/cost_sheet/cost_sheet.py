@@ -6,44 +6,70 @@ from frappe.model.document import Document
 
 
 class Costsheet(Document):
+	def validate(self):
+		from frappe.utils import flt
+
+		self.total = 0
+		if self.price_request:
+			request = frappe.get_doc("Price Request", self.price_request)
+			request.check_permission("read")
+			if request.docstatus == 2 or request.opportunity != self.opportunity:
+				frappe.throw(frappe._("Cost Sheet must match an active Price Request and its Opportunity."))
+		opportunity = frappe.get_doc("Opportunity", self.opportunity) if self.opportunity else None
+		references = {row.name: row for row in opportunity.items} if opportunity else {}
+		for row in self.items:
+			if flt(row.qty) <= 0:
+				frappe.throw(frappe._("Item quantity must be greater than zero."))
+			if row.opportunity_item:
+				source = references.get(row.opportunity_item)
+				if not source or source.item_code != row.item:
+					frappe.throw(frappe._("Item reference does not match the linked Opportunity."))
+			row.total_cost = flt(flt(row.price) + flt(row.other_cost), row.precision("total_cost"))
+			self.total += row.total_cost * flt(row.qty)
+		self.total = flt(self.total, self.precision("total"))
+
 	def on_submit(self):
 		if not self.opportunity:
 			return
 		if not self.items:
 			frappe.throw(frappe._("Add at least one item before submitting this Cost Sheet."))
-
-		quotation_meta = frappe.get_meta("Quotation")
-		quotation_filters = {}
-		if quotation_meta.has_field("custom_cost_sheet"):
-			quotation_filters["custom_cost_sheet"] = self.name
-			if frappe.db.exists("Quotation", quotation_filters):
-				return
+		if frappe.db.exists("Quotation", {"custom_cost_sheet": self.name, "docstatus": ["!=", 2]}):
+			return
 
 		opportunity = frappe.get_doc("Opportunity", self.opportunity)
-		if not opportunity.opportunity_from or not opportunity.party_name:
-			frappe.throw(
-				frappe._("Opportunity must have a party before a Quotation can be created.")
-			)
-
 		quotation = frappe.new_doc("Quotation")
-		quotation.quotation_to = opportunity.opportunity_from
-		quotation.party_name = opportunity.party_name
-		quotation.opportunity = opportunity.name
-		quotation.transaction_date = self.date
-		if quotation_meta.has_field("custom_cost_sheet"):
-			quotation.custom_cost_sheet = self.name
-
+		quotation.update({
+			"quotation_to": opportunity.opportunity_from,
+			"party_name": opportunity.party_name,
+			"company": opportunity.company,
+			"currency": opportunity.currency,
+			"opportunity": opportunity.name,
+			"custom_cost_sheet": self.name,
+			"transaction_date": self.date,
+		})
+		for field in ("customer_address", "contact_person", "campaign", "source"):
+			if opportunity.get(field):
+				quotation.set(field, opportunity.get(field))
+		source_items = {row.name: row for row in opportunity.items}
 		for cost_item in self.items:
-			quotation.append(
-				"items",
-				{
-					"item_code": cost_item.item,
-					"qty": cost_item.qty or 1,
-					"rate": cost_item.total_cost or cost_item.price or 0,
-				},
-			)
-
+			source = source_items.get(cost_item.opportunity_item)
+			values = {
+				"item_code": cost_item.item,
+				"item_name": cost_item.item_name,
+				"description": cost_item.description or (source.description if source else None),
+				"uom": cost_item.uom or (source.uom if source else None),
+				"qty": cost_item.qty,
+				"prevdoc_docname": opportunity.name,
+				"prevdoc_doctype": "Opportunity",
+				"custom_opportunity_item": cost_item.opportunity_item,
+				"custom_cost": cost_item.total_cost,
+			}
+			if source:
+				values["rate"] = source.rate
+			quotation.append("items", values)
 		quotation.set_missing_values()
+		quotation.calculate_taxes_and_totals()
+		# Submission is the purchase user's authorized action that creates a sales draft.
 		quotation.insert(ignore_permissions=True)
 
 

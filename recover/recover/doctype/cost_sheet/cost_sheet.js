@@ -10,14 +10,24 @@ frappe.ui.form.on("Cost sheet", {
 				filters: { item_group: row.item_group },
 			};
 		});
-		frm.set_query("opportunity_item", "items", function () {
-			return {
-				filters: {
-					parent: frm.doc.opportunity,
-					parenttype: "Opportunity",
-					parentfield: "items",
-				},
-			};
-		});
 	},
+});
+
+function update_cost_totals(frm, cdt, cdn) {
+ const row = locals[cdt][cdn];
+ frappe.model.set_value(cdt, cdn, "total_cost",
+  flt(flt(row.price) + flt(row.other_cost), precision("total_cost", row)));
+ update_sheet_total(frm);
+}
+
+function update_sheet_total(frm) {
+ frm.set_value("total", (frm.doc.items || []).reduce(
+  (total, row) => total + flt(row.total_cost) * flt(row.qty), 0));
+}
+
+frappe.ui.form.on("Cost Item", {
+ price: update_cost_totals,
+ other_cost: update_cost_totals,
+ qty: update_sheet_total,
+ items_remove: update_sheet_total,
 });
