@@ -93,7 +93,12 @@
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
+ "links": [
+  {
+   "link_doctype": "Cost sheet",
+   "link_fieldname": "price_request"
+  }
+ ],
  "modified": "2025-01-09 13:35:29.638607",
  "modified_by": "Administrator",
  "module": "Recover",
