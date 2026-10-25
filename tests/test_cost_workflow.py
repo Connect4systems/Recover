@@ -280,6 +280,35 @@ class CostWorkflowTests(unittest.TestCase):
             cost_workflow.sync_purchase_order(po)
             update.assert_called_once_with("COST-1", "PO", "To Receive and Bill")
 
+    def test_backfill_traverses_existing_documents_in_workflow_order(self):
+        from recover import cost_workflow
+        price = Row(name="PS-1", cost_sheet="COST-1", docstatus=1)
+        # Cost Sheets, prices, quotations, order rows, orders, direct requests,
+        # request rows, requests linked at header, PO rows, issued POs.
+        results = [["COST-1"], [price], ["Q-1"], ["SO-1"], ["SO-1"],
+                   ["MR-1"], ["MR-1"], ["MR-1"], ["PO-1"], ["PO-1"]]
+        events = []
+        self.frappe.get_doc.side_effect = lambda dt, name: Row(name=name)
+        with patch.object(self.frappe, "get_all", side_effect=results) as query, patch.object(cost_workflow, "update_cost_status", side_effect=lambda *args: events.append(args)), patch.object(cost_workflow, "sync_quotation", side_effect=lambda doc: events.append(("Quotation", doc.name))), patch.object(cost_workflow, "sync_sales_order", side_effect=lambda doc: events.append(("Sales Order", doc.name))), patch.object(cost_workflow, "sync_purchase_order", side_effect=lambda doc: events.append(("PO", doc.name))), patch.object(cost_workflow, "create_material_request") as create:
+            self.assertEqual(cost_workflow.backfill_cost_sheet_statuses(), 1)
+            self.assertEqual(events, [("COST-1", "Price Complete"), ("Quotation", "Q-1"), ("Sales Order", "SO-1"), ("PO", "PO-1")])
+            self.assertEqual(query.call_args_list[0].kwargs["filters"], {"docstatus": 1})
+            self.assertEqual(query.call_args.kwargs["filters"]["docstatus"], ["!=", 0])
+            create.assert_not_called()
+
+    def test_backfill_handles_draft_pricing_without_downstream_documents(self):
+        from recover import cost_workflow
+        with patch.object(self.frappe, "get_all", side_effect=[["COST-1"], [Row(name="PS-1", cost_sheet="COST-1", docstatus=0)], [], []]), patch.object(cost_workflow, "update_cost_status") as update:
+            self.assertEqual(cost_workflow.backfill_cost_sheet_statuses(), 1)
+            update.assert_called_once_with("COST-1", "Pending Price")
+
+    def test_backfill_with_no_submitted_cost_sheets_does_nothing(self):
+        from recover import cost_workflow
+        with patch.object(self.frappe, "get_all", return_value=[]) as query, patch.object(self.frappe.db, "set_value") as save:
+            self.assertEqual(cost_workflow.backfill_cost_sheet_statuses(), 0)
+            query.assert_called_once()
+            save.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

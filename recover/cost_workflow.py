@@ -107,3 +107,53 @@ def sync_fulfilment(doc, method=None):
         sync_sales_order(frappe.get_doc("Sales Order", name))
     for name in purchase_orders:
         sync_purchase_order(frappe.get_doc("Purchase Order", name))
+
+
+def backfill_cost_sheet_statuses():
+    """Rebuild existing progress from explicit links without creating documents."""
+    sheets = frappe.get_all("Cost sheet", filters={"docstatus": 1}, pluck="name")
+    if not sheets:
+        return 0
+    prices = frappe.get_all("Price Sheet", filters={
+        "cost_sheet": ["in", sheets], "docstatus": ["!=", 2],
+    }, fields=["name", "cost_sheet", "docstatus"], order_by="modified asc, name asc")
+    for price in prices:
+        update_cost_status(price.cost_sheet, "Price Complete" if price.docstatus == 1 else "Pending Price")
+
+    links = [["custom_cost_sheet", "in", sheets]]
+    if prices:
+        links.append(["custom_price_sheet", "in", [price.name for price in prices]])
+    quotations = frappe.get_all("Quotation", or_filters=links,
+                                pluck="name", order_by="modified asc, name asc")
+    for name in quotations:
+        sync_quotation(frappe.get_doc("Quotation", name))
+
+    orders = set()
+    if quotations:
+        orders.update(frappe.get_all("Sales Order Item", filters={
+            "prevdoc_docname": ["in", quotations], "parenttype": "Sales Order",
+        }, pluck="parent"))
+    if orders:
+        for name in frappe.get_all("Sales Order", filters={"name": ["in", sorted(orders)]},
+                                   pluck="name", order_by="modified asc, name asc"):
+            sync_sales_order(frappe.get_doc("Sales Order", name))
+
+    requests = set(frappe.get_all("Cost sheet", filters={"name": ["in", sheets],
+        "material_request": ["is", "set"]}, pluck="material_request"))
+    if orders:
+        requests.update(frappe.get_all("Material Request Item", filters={
+            "sales_order": ["in", sorted(orders)], "parenttype": "Material Request",
+        }, pluck="parent"))
+        requests.update(frappe.get_all("Material Request", filters={
+            "custom_sales_order": ["in", sorted(orders)],
+        }, pluck="name"))
+    if requests:
+        purchases = set(frappe.get_all("Purchase Order Item", filters={
+            "material_request": ["in", sorted(requests)], "parenttype": "Purchase Order",
+        }, pluck="parent"))
+        if purchases:
+            for name in frappe.get_all("Purchase Order", filters={
+                "name": ["in", sorted(purchases)], "docstatus": ["!=", 0],
+            }, pluck="name", order_by="modified asc, name asc"):
+                sync_purchase_order(frappe.get_doc("Purchase Order", name))
+    return len(sheets)
