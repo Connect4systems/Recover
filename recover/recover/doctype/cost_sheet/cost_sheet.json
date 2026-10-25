@@ -13,6 +13,7 @@
   "status",
   "title",
   "material_request",
+  "purchasing_connections",
   "section_break_axub",
   "items",
   "total",
@@ -25,6 +26,15 @@
   "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "purchasing_connections",
+   "fieldtype": "Table",
+   "label": "Purchasing Connections",
+   "options": "Cost Sheet Connection",
+   "read_only": 1,
+   "hidden": 1,
+   "no_copy": 1
+  },
   {
    "fieldname": "title",
    "fieldtype": "Data",

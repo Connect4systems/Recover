@@ -42,4 +42,6 @@ Refresh the browser after restarting. Migration installs the new DocTypes and qu
 
 To rerun status backfilling explicitly: `bench --site <site> execute recover.cost_workflow.backfill_cost_sheet_statuses`.
 
+Cost Sheet **Connections > Purchasing** shows linked Material Requests and Purchase Orders, including drafts. Links follow the source Sales Order and Material Request references, support multiple documents per Cost Sheet and combined orders across Cost Sheets, and are backfilled during migration. These connections do not grant access to purchasing documents; standard Frappe permissions apply.
+
 Run isolated controller checks with `python -m unittest discover -s tests -v`. A live Frappe/ERPNext site is required to verify document mapping, permissions, migration, and the full browser workflow.

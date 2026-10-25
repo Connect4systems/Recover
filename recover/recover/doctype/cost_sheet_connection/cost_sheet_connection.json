@@ -1,0 +1,15 @@
+{
+ "doctype": "DocType",
+ "name": "Cost Sheet Connection",
+ "module": "Recover",
+ "istable": 1,
+ "engine": "InnoDB",
+ "field_order": ["material_request", "purchase_order"],
+ "fields": [
+  {"fieldname": "material_request", "fieldtype": "Link", "label": "Material Request", "options": "Material Request", "in_list_view": 1},
+  {"fieldname": "purchase_order", "fieldtype": "Link", "label": "Purchase Order", "options": "Purchase Order", "in_list_view": 1}
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

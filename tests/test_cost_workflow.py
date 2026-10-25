@@ -270,17 +270,29 @@ class CostWorkflowTests(unittest.TestCase):
 
     def test_purchase_order_follows_material_request_sales_order(self):
         from recover import cost_workflow
-        request = Row(custom_sales_order="SO-1", items=[Row(sales_order="SO-1")])
+        request = Row(name="MR-1", custom_sales_order="SO-1", items=[Row(sales_order="SO-1")])
         order = Row(name="SO-1")
         self.frappe.get_doc.side_effect = lambda dt, name: request if dt == "Material Request" else order
         with patch.object(self.frappe, "get_all", return_value=[]), patch.object(cost_workflow, "sales_order_cost_sheets", return_value={"COST-1"}), patch.object(cost_workflow, "update_cost_status") as update:
-            po = Row(docstatus=0, status="Draft", items=[Row(material_request="MR-1")])
+            po = Row(name="PO-1", docstatus=0, status="Draft", items=[Row(material_request="MR-1")])
             cost_workflow.sync_purchase_order(po)
             update.assert_not_called()
             po.docstatus = 1
             po.status = "To Receive and Bill"
             cost_workflow.sync_purchase_order(po)
             update.assert_called_once_with("COST-1", "PO", "To Receive and Bill")
+
+    def test_purchasing_connections_are_added_once(self):
+        from recover import cost_workflow
+        connection = Mock()
+        with patch.object(self.frappe, "new_doc", return_value=connection), patch.object(self.frappe.db, "get_value", return_value=1), patch.object(self.frappe.db, "exists", side_effect=[False, True]):
+            cost_workflow.add_purchasing_connection("COST-1", "purchase_order", "PO-1")
+            cost_workflow.add_purchasing_connection("COST-1", "purchase_order", "PO-1")
+            connection.insert.assert_called_once_with(ignore_permissions=True)
+            self.assertEqual(connection.update.call_args.args[0], {
+                "parent": "COST-1", "parenttype": "Cost sheet",
+                "parentfield": "purchasing_connections", "purchase_order": "PO-1", "docstatus": 1,
+            })
 
     def test_backfill_traverses_existing_documents_in_workflow_order(self):
         from recover import cost_workflow

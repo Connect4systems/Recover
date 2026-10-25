@@ -6,3 +6,4 @@
 # Patches added in this section will be executed after doctypes are migrated
 recover.backfill_cost_status
 recover.backfill_cost_titles
+recover.backfill_purchasing_connections

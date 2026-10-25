@@ -249,6 +249,10 @@ after_install = "recover.setup.setup_custom_fields"
 after_migrate = "recover.setup.setup_custom_fields"
 
 doc_events = {
+	"Material Request": {
+		"on_update": "recover.cost_workflow.sync_material_request_connections",
+		"on_update_after_submit": "recover.cost_workflow.sync_material_request_connections",
+	},
 	"Quotation": {
 		event: "recover.cost_workflow.sync_quotation"
 		for event in ("on_update", "on_submit", "on_cancel", "on_update_after_submit", "on_change")

@@ -55,6 +55,34 @@ def sales_order_cost_sheets(doc):
     return sheets
 
 
+def add_purchasing_connection(sheet, field, document):
+    docstatus = frappe.db.get_value("Cost sheet", sheet, "docstatus")
+    if docstatus is None:
+        return
+    filters = {"parent": sheet, "parenttype": "Cost sheet",
+               "parentfield": "purchasing_connections", field: document}
+    if frappe.db.exists("Cost Sheet Connection", filters):
+        return
+    connection = frappe.new_doc("Cost Sheet Connection")
+    connection.update({**filters, "docstatus": docstatus})
+    connection.insert(ignore_permissions=True)
+
+
+def material_request_cost_sheets(doc):
+    sheets = set(frappe.get_all("Cost sheet", filters={"material_request": doc.name}, pluck="name"))
+    orders = {row.get("sales_order") for row in doc.items if row.get("sales_order")}
+    if doc.get("custom_sales_order"):
+        orders.add(doc.custom_sales_order)
+    for order in orders:
+        sheets.update(sales_order_cost_sheets(frappe.get_doc("Sales Order", order)))
+    return sheets
+
+
+def sync_material_request_connections(doc, method=None):
+    for sheet in material_request_cost_sheets(doc):
+        add_purchasing_connection(sheet, "material_request", doc.name)
+
+
 def sync_quotation(doc, method=None):
     for name in quotation_cost_sheets(doc):
         update_cost_status(name, "Quotation", doc.status)
@@ -85,24 +113,22 @@ def create_material_request(doc, method=None):
         existing = request.name
     for name in sheets:
         frappe.db.set_value("Cost sheet", name, "material_request", existing)
+        add_purchasing_connection(name, "material_request", existing)
     sync_sales_order(doc)
 
 
-def sync_purchase_order(doc, method=None):
-    # A draft PO has not yet been issued.
-    if doc.docstatus == 0:
-        return
+def sync_purchase_order(doc, method=None, update_status=True):
     sheets = set()
     for name in {row.get("material_request") for row in doc.items if row.get("material_request")}:
         request = frappe.get_doc("Material Request", name)
-        sheets.update(frappe.get_all("Cost sheet", filters={"material_request": name}, pluck="name"))
-        orders = {row.get("sales_order") for row in request.items if row.get("sales_order")}
-        if request.get("custom_sales_order"):
-            orders.add(request.custom_sales_order)
-        for order in orders:
-            sheets.update(sales_order_cost_sheets(frappe.get_doc("Sales Order", order)))
+        sources = material_request_cost_sheets(request)
+        sheets.update(sources)
+        for sheet in sources:
+            add_purchasing_connection(sheet, "material_request", name)
     for name in sheets:
-        update_cost_status(name, "PO", doc.status)
+        add_purchasing_connection(name, "purchase_order", doc.name)
+        if update_status and doc.docstatus != 0:
+            update_cost_status(name, "PO", doc.status)
 
 
 def sync_fulfilment(doc, method=None):
