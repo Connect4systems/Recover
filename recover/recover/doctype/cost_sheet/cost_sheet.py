@@ -6,6 +6,11 @@ from frappe.model.document import Document
 
 
 class Costsheet(Document):
+	def before_save(self):
+		from recover.cost_workflow import cost_sheet_title
+
+		self.title = cost_sheet_title(self.name, self.status)
+
 	def validate(self):
 		from frappe.utils import flt
 

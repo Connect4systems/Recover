@@ -11,6 +11,7 @@
   "column_break_xlpu",
   "date",
   "status",
+  "title",
   "material_request",
   "section_break_axub",
   "items",
@@ -24,6 +25,14 @@
   "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "read_only": 1,
+   "hidden": 1,
+   "no_copy": 1
+  },
   {
    "fieldname": "status",
    "fieldtype": "Data",
@@ -200,5 +209,7 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "title_field": "title",
+ "show_title_field_in_link": 1
 }

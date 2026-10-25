@@ -229,7 +229,9 @@ class CostWorkflowTests(unittest.TestCase):
             update_cost_status("COST-1", "Quotation", "Ordered")
             save.assert_not_called()
             update_cost_status("COST-1", "PO", "Completed")
-            save.assert_called_once_with("Cost sheet", "COST-1", "status", "PO - Completed")
+            save.assert_called_once_with("Cost sheet", "COST-1", {
+                "status": "PO - Completed", "title": "COST-1 - PO - Completed",
+            })
 
     def test_workflow_ignores_cancelled_cost_sheet(self):
         from recover.cost_workflow import update_cost_status

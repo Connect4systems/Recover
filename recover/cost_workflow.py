@@ -6,6 +6,10 @@ STAGES = {"Draft": 0, "Pending Price": 1, "Price Complete": 2,
           "Quotation": 3, "Sales Order": 4, "PO": 5}
 
 
+def cost_sheet_title(name, status):
+    return f"{name} - {status or 'Draft'}"
+
+
 def update_cost_status(name, stage, status=None):
     if not name:
         return
@@ -21,7 +25,16 @@ def update_cost_status(name, stage, status=None):
         return
     value = f"{stage} - {status}" if status else stage
     if rows[0].status != value:
-        frappe.db.set_value("Cost sheet", name, "status", value)
+        frappe.db.set_value("Cost sheet", name, {
+            "status": value, "title": cost_sheet_title(name, value),
+        })
+
+
+def backfill_cost_sheet_titles():
+    for sheet in frappe.get_all("Cost sheet", fields=["name", "status", "title"]):
+        title = cost_sheet_title(sheet.name, sheet.status)
+        if sheet.title != title:
+            frappe.db.set_value("Cost sheet", sheet.name, "title", title, update_modified=False)
 
 
 def quotation_cost_sheets(doc):

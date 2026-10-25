@@ -19,6 +19,8 @@ Items originate in the Price Request. No opportunity item rows or opportunity-it
 
 The Cost Sheet's read-only **Status** follows this workflow:
 
+The displayed document title includes its number and workflow status, for example **COST-26-10-01 - Pending Price** or **COST-26-10-01 - Sales Order - To Deliver and Bill**. Titles update with status changes. Migration fills titles on existing Cost Sheets without changing document numbers or links.
+
 - Submitting the Cost Sheet creates the draft Price Sheet and sets **Pending Price**.
 - Submitting the Price Sheet sets **Price Complete**.
 - Saving a linked quotation sets **Quotation - [Status]**.
