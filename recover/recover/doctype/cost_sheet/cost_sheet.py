@@ -26,9 +26,12 @@ class Costsheet(Document):
 		self.total = flt(self.total, self.precision("total"))
 
 	def on_submit(self):
+		from recover.cost_workflow import update_cost_status
+
 		if not self.opportunity or not self.items:
 			frappe.throw(frappe._("An Opportunity and at least one item are required to submit a Cost Sheet."))
 		if frappe.db.exists("Price Sheet", {"cost_sheet": self.name, "docstatus": ["!=", 2]}):
+			update_cost_status(self.name, "Pending Price")
 			return
 		opportunity = frappe.get_doc("Opportunity", self.opportunity)
 		price_sheet = frappe.new_doc("Price Sheet")
@@ -48,6 +51,7 @@ class Costsheet(Document):
 			price_sheet.append("items", values)
 		# Submitting purchase costs creates the sales team's draft pricing document.
 		price_sheet.insert(ignore_permissions=True)
+		update_cost_status(self.name, "Pending Price")
 
 
 @frappe.whitelist()

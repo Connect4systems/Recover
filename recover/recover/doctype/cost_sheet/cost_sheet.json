@@ -10,6 +10,7 @@
   "price_request",
   "column_break_xlpu",
   "date",
+  "status",
   "material_request",
   "section_break_axub",
   "items",
@@ -23,6 +24,16 @@
   "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status",
+   "default": "Draft",
+   "read_only": 1,
+   "no_copy": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
   {
    "fieldname": "section_break_jblm",
    "fieldtype": "Section Break"

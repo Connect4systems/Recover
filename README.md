@@ -17,6 +17,17 @@ Items originate in the Price Request. No opportunity item rows or opportunity-it
 6. A sales user enters **Unit Profit**, an amount rather than a percentage. **Unit Selling Price = Unit Total Cost + Unit Profit**. Source cost details remain read-only and are checked against the submitted Cost Sheet.
 7. Submit the Price Sheet, then choose **Create > Quotation**. Review and save the quotation. It is linked to the opportunity and price sheet; every item's rate is its selling price, and its Cost (`custom_cost`) is the unit total cost.
 
+The Cost Sheet's read-only **Status** follows this workflow:
+
+- Submitting the Cost Sheet creates the draft Price Sheet and sets **Pending Price**.
+- Submitting the Price Sheet sets **Price Complete**.
+- Saving a linked quotation sets **Quotation - [Status]**.
+- Saving a Sales Order made from that quotation sets **Sales Order - [Status]**.
+- Submitting that Sales Order automatically creates a draft **Purchase Material Request** using ERPNext's standard Sales Order mapping. It retains the source Sales Order and item references; repeat events reuse the existing active request. Purchasing reviews and submits the request before issuing a PO.
+- Submitting a Purchase Order against that Material Request sets **PO - [Status]**.
+
+Later status changes, including cancellation, update the current stage. Delivery, receipt, and invoice submission/cancellation refresh order statuses too. Earlier stages cannot overwrite a later stage; cancelled Cost Sheets are ignored. If several documents exist at the same stage, the latest processed event supplies the displayed status. Orders combining multiple source quotations update all originating Cost Sheets; the Material Request link on each Cost Sheet shows its most recently created request. Existing documents are not backfilled.
+
 After deploying the app, run:
 
 ```bash

@@ -247,3 +247,25 @@ app_license = "mit"
 doctype_js = {"Opportunity": "public/js/opportunity.js"}
 after_install = "recover.setup.setup_custom_fields"
 after_migrate = "recover.setup.setup_custom_fields"
+
+doc_events = {
+	"Quotation": {
+		event: "recover.cost_workflow.sync_quotation"
+		for event in ("on_update", "on_submit", "on_cancel", "on_update_after_submit", "on_change")
+	},
+	"Sales Order": {
+		**{event: "recover.cost_workflow.sync_sales_order"
+		   for event in ("on_update", "on_cancel", "on_update_after_submit", "on_change")},
+		"on_submit": "recover.cost_workflow.create_material_request",
+	},
+	"Purchase Order": {
+		event: "recover.cost_workflow.sync_purchase_order"
+		for event in ("on_update", "on_submit", "on_cancel", "on_update_after_submit", "on_change")
+	},
+}
+
+for _doctype in ("Delivery Note", "Sales Invoice", "Purchase Receipt", "Purchase Invoice"):
+	doc_events[_doctype] = {
+		event: "recover.cost_workflow.sync_fulfilment"
+		for event in ("on_submit", "on_cancel", "on_update_after_submit")
+	}

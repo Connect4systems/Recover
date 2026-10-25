@@ -4,6 +4,16 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 def setup_custom_fields():
 	create_custom_fields({
+		"Material Request": [{
+			"fieldname": "custom_sales_order",
+			"label": "Source Sales Order",
+			"fieldtype": "Link",
+			"options": "Sales Order",
+			"read_only": 1,
+			"no_copy": 1,
+			"search_index": 1,
+			"insert_after": "material_request_type",
+		}],
 		"Quotation": [{
 			"fieldname": "custom_price_sheet",
 			"label": "Price Sheet",

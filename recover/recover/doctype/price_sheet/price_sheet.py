@@ -4,6 +4,11 @@ from frappe.utils import flt
 
 
 class PriceSheet(Document):
+	def on_submit(self):
+		from recover.cost_workflow import update_cost_status
+
+		update_cost_status(self.cost_sheet, "Price Complete")
+
 	def validate(self):
 		cost_sheet = frappe.get_doc("Cost sheet", self.cost_sheet)
 		if cost_sheet.docstatus != 1:

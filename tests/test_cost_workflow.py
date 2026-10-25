@@ -31,6 +31,8 @@ class CostWorkflowTests(unittest.TestCase):
         frappe.get_doc = Mock()
         frappe.new_doc = Mock()
         frappe.db = SimpleNamespace(exists=Mock(return_value=False), get_value=Mock(return_value=1))
+        frappe.db.sql = Mock(return_value=[])
+        frappe.db.set_value = Mock()
         frappe.get_cached_value = Mock(return_value="Equipment")
         frappe.get_meta = Mock()
         frappe.get_all = Mock(return_value=["SUP-1"])
@@ -220,6 +222,63 @@ class CostWorkflowTests(unittest.TestCase):
         sheet.docstatus = 0
         with self.assertRaises(ValueError):
             self.pricing.make_quotation("PS-1")
+
+    def test_workflow_stage_never_regresses(self):
+        from recover.cost_workflow import update_cost_status
+        with patch.object(self.frappe.db, "sql", return_value=[Row(status="PO - To Receive and Bill", docstatus=1)]), patch.object(self.frappe.db, "set_value") as save:
+            update_cost_status("COST-1", "Quotation", "Ordered")
+            save.assert_not_called()
+            update_cost_status("COST-1", "PO", "Completed")
+            save.assert_called_once_with("Cost sheet", "COST-1", "status", "PO - Completed")
+
+    def test_workflow_ignores_cancelled_cost_sheet(self):
+        from recover.cost_workflow import update_cost_status
+        with patch.object(self.frappe.db, "sql", return_value=[Row(status="Pending Price", docstatus=2)]), patch.object(self.frappe.db, "set_value") as save:
+            update_cost_status("COST-1", "Price Complete")
+            save.assert_not_called()
+
+    def test_price_sheet_submission_marks_pricing_complete(self):
+        with patch("recover.cost_workflow.update_cost_status") as update:
+            self.make_price_sheet().on_submit()
+            update.assert_called_once_with("COST-1", "Price Complete")
+
+    def test_sales_order_resolves_multiple_quotation_sources(self):
+        from recover.cost_workflow import sales_order_cost_sheets
+        self.frappe.get_doc.side_effect = lambda dt, name: Row(custom_cost_sheet={"Q1": "C1", "Q2": "C2"}[name])
+        order = Row(items=[Row(prevdoc_docname="Q1"), Row(prevdoc_docname="Q2"), Row(prevdoc_docname="Q1")])
+        self.assertEqual(sales_order_cost_sheets(order), {"C1", "C2"})
+
+    def test_sales_order_creates_one_draft_material_request(self):
+        from recover import cost_workflow
+        erp_module = ModuleType("erpnext.selling.doctype.sales_order.sales_order")
+        request = Mock(name="request")
+        request.name = "MR-1"
+        request.items = [Row(item_code="ITEM-1")]
+        erp_module.make_material_request = Mock(return_value=request)
+        with patch.dict(sys.modules, {"erpnext.selling.doctype.sales_order.sales_order": erp_module}), patch.object(cost_workflow, "sales_order_cost_sheets", return_value={"COST-1"}), patch.object(cost_workflow, "sync_sales_order"), patch.object(self.frappe.db, "get_value", return_value=None):
+            cost_workflow.create_material_request(Row(name="SO-1"))
+            erp_module.make_material_request.assert_called_once_with("SO-1")
+            self.assertEqual(request.custom_sales_order, "SO-1")
+            self.assertEqual(request.material_request_type, "Purchase")
+            request.insert.assert_called_once_with(ignore_permissions=True)
+        with patch.object(cost_workflow, "sales_order_cost_sheets", return_value={"COST-1"}), patch.object(cost_workflow, "sync_sales_order"), patch.object(self.frappe.db, "get_value", return_value="MR-1"):
+            erp_module.make_material_request.reset_mock()
+            cost_workflow.create_material_request(Row(name="SO-1"))
+            erp_module.make_material_request.assert_not_called()
+
+    def test_purchase_order_follows_material_request_sales_order(self):
+        from recover import cost_workflow
+        request = Row(custom_sales_order="SO-1", items=[Row(sales_order="SO-1")])
+        order = Row(name="SO-1")
+        self.frappe.get_doc.side_effect = lambda dt, name: request if dt == "Material Request" else order
+        with patch.object(self.frappe, "get_all", return_value=[]), patch.object(cost_workflow, "sales_order_cost_sheets", return_value={"COST-1"}), patch.object(cost_workflow, "update_cost_status") as update:
+            po = Row(docstatus=0, status="Draft", items=[Row(material_request="MR-1")])
+            cost_workflow.sync_purchase_order(po)
+            update.assert_not_called()
+            po.docstatus = 1
+            po.status = "To Receive and Bill"
+            cost_workflow.sync_purchase_order(po)
+            update.assert_called_once_with("COST-1", "PO", "To Receive and Bill")
 
 
 if __name__ == "__main__":
