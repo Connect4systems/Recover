@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"31j8K-TL7X\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Pre-Sales</span>\",\"col\":12}},{\"id\":\"kSoPJHqh6r\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lead\",\"col\":3}},{\"id\":\"S5OL325KgV\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Opportunity\",\"col\":3}},{\"id\":\"5HGstfOGSZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quotation\",\"col\":3}},{\"id\":\"cV7rj2b7MU\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"peiMYwXTT6\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Sales</b></span>\",\"col\":12}},{\"id\":\"nbe55XvH0P\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"XHu8RFfJQG\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order\",\"col\":3}},{\"id\":\"D6FIC4oYAS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Note\",\"col\":3}},{\"id\":\"mfirG8tlrg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Trip\",\"col\":3}},{\"id\":\"jc3trP1k49\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"bBVzaEHoCm\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Support</b></span>\",\"col\":12}},{\"id\":\"j-0TLpp_NR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Issue\",\"col\":3}},{\"id\":\"DgtuJyk_Sg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"id\":\"i17veRMzn8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Project\",\"col\":3}}]",
+ "content": "[{\"id\":\"31j8K-TL7X\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Pre-Sales</span>\",\"col\":12}},{\"id\":\"kSoPJHqh6r\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lead\",\"col\":3}},{\"id\":\"S5OL325KgV\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Opportunity\",\"col\":3}},{\"id\":\"5HGstfOGSZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quotation\",\"col\":3}},{\"id\":\"cV7rj2b7MU\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"peiMYwXTT6\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Sales</b></span>\",\"col\":12}},{\"id\":\"nbe55XvH0P\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"XHu8RFfJQG\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order\",\"col\":3}},{\"id\":\"D6FIC4oYAS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Note\",\"col\":3}},{\"id\":\"mfirG8tlrg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Delivery Trip\",\"col\":3}},{\"id\":\"jc3trP1k49\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"bBVzaEHoCm\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Support</b></span>\",\"col\":12}},{\"id\":\"j-0TLpp_NR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Issue\",\"col\":3}},{\"id\":\"DgtuJyk_Sg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":3}},{\"id\":\"i17veRMzn8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Project\",\"col\":3}},{\"id\":\"a6_Qd1CudN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}}]",
  "creation": "2024-12-22 11:51:31.875397",
  "custom_blocks": [],
  "docstatus": 0,
@@ -12,7 +12,7 @@
  "is_hidden": 0,
  "label": "Sales Support",
  "links": [],
- "modified": "2025-01-10 15:41:10.790729",
+ "modified": "2026-10-24 14:46:14.465380",
  "modified_by": "Administrator",
  "module": "Recover",
  "name": "Sales Support",
@@ -26,8 +26,16 @@
    "role": "Sales User"
   }
  ],
- "sequence_id": 4.0,
+ "sequence_id": 12.0,
  "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Item",
+   "link_to": "Item",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
   {
    "color": "Grey",
    "doc_view": "List",
