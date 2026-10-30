@@ -1,5 +1,8 @@
 frappe.ui.form.on("Opportunity", {
  refresh(frm) {
+  for (const label of ["Supplier Quotation", "Request For Quotation", "Quotation"]) {
+   frm.remove_custom_button(__(label), __("Create"));
+  }
   if (!frm.is_new() && frm.doc.docstatus !== 2 && frappe.model.can_create("Price Request")) {
    frm.add_custom_button(__("Price Request"), () => {
     frappe.model.open_mapped_doc({

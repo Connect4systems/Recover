@@ -7,8 +7,7 @@ IT works and Equipment rent
 mit
 ### Opportunity pricing workflow
 
-1. Save an Opportunity and choose **Create > Price Request**. The request is linked to the opportunity; add the requested items directly in the Price Request.
-Items originate in the Price Request. No opportunity item rows or opportunity-item references are required at any stage; the final quotation links to the Opportunity at document level.
+1. Save an Opportunity and choose **Create > Price Request**. A new unsaved request opens, linked to the Opportunity, with all Opportunity item rows copied (item code, name, description, UOM, and quantity). Review and save the request. Rates are not copied. The Opportunity's Create menu hides **Supplier Quotation**, **Request For Quotation**, and **Quotation**, while preserving other entries, including **Select Item** supplied by the other app. The final quotation links to the Opportunity at document level.
 
 2. Save the Price Request and choose **Create > Cost Sheet**. Item codes, names, descriptions, units, and quantities are copied separately. Purchase User and Purchase Manager can create and submit cost sheets.
 3. Enter each item's unit **Price** and **Other Cost** in the opportunity currency. **Unit Total Cost = Price + Other Cost**. The sheet total sums quantity multiplied by unit total cost.
@@ -45,3 +44,11 @@ To rerun status backfilling explicitly: `bench --site <site> execute recover.cos
 Cost Sheet **Connections > Purchasing** shows linked Material Requests and Purchase Orders, including drafts. Links follow the source Sales Order and Material Request references, support multiple documents per Cost Sheet and combined orders across Cost Sheets, and are backfilled during migration. These connections do not grant access to purchasing documents; standard Frappe permissions apply.
 
 Run isolated controller checks with `python -m unittest discover -s tests -v`. A live Frappe/ERPNext site is required to verify document mapping, permissions, migration, and the full browser workflow.
+
+### Opportunity Select Item (provided by the other app)
+
+The existing **Create > Select Item** popup uses optional filters ordered **Category > Item Group > Brand**. Item Group choices are leaf groups (`is_group = 0`) linked through `Item Group.custom_category`. Allowed brands come from the selected Category's Brands child table (`Brand Table.brand`). Changing Category clears Item Group and Brand; changing any filter refreshes results and clears row selections.
+
+Items are filtered through `Item.custom_category`, `Item.item_group`, and `Item.brand`; disabled items and variant templates are excluded. Results show 50 items per page with Select, Brand, Item Code, Item Name, Description, qty, and Item Image columns. Brand comes from the Item. The displayed qty sums `Bin.actual_qty` across accessible warehouses belonging to the Opportunity's company.
+
+Pressing **Add** copies selected items into Opportunity Items with code, name, description, stock UOM, and quantity 1, skipping existing item codes. The popup closes so the user can review and save the Opportunity. It does not display, fetch, or set rates. This describes the supplied behavior of the other app; its implementation is not included in this repository.

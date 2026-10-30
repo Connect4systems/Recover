@@ -22,6 +22,16 @@ def make_price_request(source_name, target_doc=None):
 			"field_no_map": ["naming_series", "amended_from", "items"],
 			"field_map": {"name": "opportunity", "opportunity_from": "party_type", "party_name": "party"},
 		},
+		"Opportunity Item": {
+			"doctype": "Pricing Items",
+			"field_map": {
+				"item_code": "item",
+				"item_name": "item_name",
+				"description": "description",
+				"uom": "uom",
+				"qty": "qty",
+			},
+		},
 	}, target_doc)
 
 
