@@ -60,6 +60,8 @@ class CostWorkflowTests(unittest.TestCase):
 
     def setUp(self):
         self.workflow.apply_workflow.reset_mock(return_value=True, side_effect=True)
+        self.frappe.db.get_value.side_effect = None
+        self.frappe.db.get_value.return_value = 1
         self.frappe.get_doc.side_effect = None
         self.frappe.db.exists.reset_mock(return_value=True)
         self.frappe.db.exists.return_value = False
@@ -230,7 +232,7 @@ class CostWorkflowTests(unittest.TestCase):
         sheet.party = "CUSTOMER"
         sheet.precision = lambda field: 2
         sheet.check_permission = Mock()
-        sheet.items = [Row(cost_sheet_item="COST-ROW-1", profit=5)]
+        sheet.items = [Row(cost_sheet_item="COST-ROW-1", profit=5, other_cost=2.5)]
         self.sheet.docstatus = 1
         self.sheet.opportunity = "OPP-1"
         self.sheet.items[0].total_cost = 12.5
@@ -251,6 +253,42 @@ class CostWorkflowTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             sheet.validate()
 
+    def test_price_sheet_other_cost_edit_survives_validation(self):
+        sheet = self.make_price_sheet()
+        sheet.items[0].other_cost = 7
+        sheet.items[0].price = 999
+        sheet.items[0].total_cost = 999
+        for _ in range(2):
+            sheet.validate()
+            self.assertEqual(sheet.items[0].price, 10)
+            self.assertEqual(sheet.items[0].other_cost, 7)
+            self.assertEqual(sheet.items[0].total_cost, 17)
+            self.assertEqual(sheet.items[0].selling_price, 22)
+            self.assertEqual(sheet.total, 66)
+        self.assertEqual(self.sheet.items[0].other_cost, 2.5)
+
+    def test_price_sheet_other_cost_can_be_zero(self):
+        sheet = self.make_price_sheet()
+        sheet.items[0].other_cost = 0
+        sheet.validate()
+        self.assertEqual(sheet.items[0].other_cost, 0)
+        self.assertEqual(sheet.items[0].total_cost, 10)
+        self.assertEqual(sheet.items[0].selling_price, 15)
+
+    def test_quotation_excludes_pricing_cycle_costs(self):
+        sheet = self.make_price_sheet()
+        sheet.items[0].other_cost = 7
+        sheet.validate()
+        quotation = Mock(items=[Row(rate=0)])
+        self.frappe.new_doc.return_value = quotation
+        self.frappe.db.get_value.side_effect = lambda dt, *args: 1 if dt == "Cost sheet" else None
+        self.pricing.make_quotation("PS-1")
+        values = quotation.append.call_args.args[1]
+        self.assertEqual(values["rate"], 22)
+        for field in ("custom_cost", "price", "other_cost", "total_cost", "profit", "supplier"):
+            self.assertNotIn(field, values)
+        quotation.insert.assert_called_once_with()
+
     def test_price_sheet_requires_submitted_cost_sheet(self):
         sheet = self.make_price_sheet()
         self.sheet.docstatus = 0
@@ -263,19 +301,90 @@ class CostWorkflowTests(unittest.TestCase):
         quotation = Mock()
         self.frappe.new_doc.return_value = quotation
         quotation.items = [Row(rate=0)]
+        self.frappe.db.get_value.side_effect = lambda dt, *args: 1 if dt == "Cost sheet" else None
         self.pricing.make_quotation("PS-1")
         self.assertEqual(quotation.items[0].rate, 17.5)
         values = quotation.append.call_args.args[1]
-        self.assertEqual((values["item_code"], values["rate"], values["custom_cost"]), ("ITEM-1", 17.5, 12.5))
+        self.assertEqual((values["item_code"], values["rate"]), ("ITEM-1", 17.5))
         header = quotation.update.call_args.args[0]
         self.assertEqual((header["opportunity"], header["custom_price_sheet"]), ("OPP-1", "PS-1"))
-        quotation.insert.assert_not_called()
+        quotation.insert.assert_called_once_with()
+
+    def test_quotation_creation_reuses_existing_active_quotation(self):
+        self.make_price_sheet()
+        quotation = Mock()
+        self.frappe.db.get_value.side_effect = lambda dt, *args: 1 if dt == "Cost sheet" else "Q-1"
+        original = self.frappe.get_doc.side_effect
+        self.frappe.get_doc.side_effect = lambda dt, name: quotation if dt == "Quotation" else original(dt, name)
+        self.frappe.new_doc.reset_mock()
+        self.assertIs(self.pricing.make_quotation("PS-1"), quotation)
+        quotation.check_permission.assert_called_once_with("read")
+        self.frappe.new_doc.assert_not_called()
 
     def test_draft_price_sheet_cannot_create_quotation(self):
         sheet = self.make_price_sheet()
         sheet.docstatus = 0
         with self.assertRaises(ValueError):
             self.pricing.make_quotation("PS-1")
+
+    def test_quotation_insert_failure_blocks_price_sheet_submission(self):
+        sheet = self.make_price_sheet()
+        sheet.validate()
+        quotation = Mock(items=[Row(rate=0)])
+        quotation.insert.side_effect = ValueError("Missing mandatory quotation field")
+        self.frappe.new_doc.return_value = quotation
+        self.frappe.db.get_value.side_effect = lambda dt, *args: 1 if dt == "Cost sheet" else None
+        with patch("recover.cost_workflow.update_cost_status"), self.assertRaises(ValueError):
+            sheet.on_submit()
+        self.assertFalse(hasattr(sheet, "quotation"))
+
+    def test_opportunity_status_follows_active_cycle_and_cancellation(self):
+        from recover.opportunity_workflow import sync_opportunity
+        cases = [
+            ("Open", [], True, False, False, False, False, "Open"),
+            ("Open", [], True, True, False, False, False, "Pending Cost"),
+            ("Pending Cost", [], True, False, True, False, False, "Pending Pricing"),
+            ("Pending Pricing", [Row(name="Q-1", docstatus=0, custom_price_sheet="PS-1")], True, False, True, True, False, "Pending Quotation"),
+            ("Pending Quotation", [Row(name="Q-1", docstatus=1, custom_price_sheet="PS-1")], True, True, True, True, False, "Quotation"),
+            ("Quotation", [Row(name="Q-1", docstatus=1, custom_price_sheet="PS-1")], True, True, True, True, True, "Converted"),
+            # Cancelled quotations/orders are excluded by the queries; remaining stages win.
+            ("Quotation", [], True, False, True, True, False, "Pending Quotation"),
+            ("Pending Quotation", [], True, False, True, False, False, "Pending Pricing"),
+            ("Pending Cost", [], False, False, False, False, False, "Open"),
+        ]
+        for current, quotations, cycle, pending, cost, price, order, expected in cases:
+            with self.subTest(current=current, expected=expected):
+                doc = Row(doctype="Opportunity", name="OPP-1", status=current)
+
+                def exists(doctype, filters):
+                    if doctype == "Price Request":
+                        return pending if "workflow_state" in filters else cycle
+                    return {"Cost sheet": cost, "Price Sheet": price, "Sales Order Item": order}[doctype]
+
+                with patch.object(self.frappe.db, "sql", return_value=[Row(status=current)]), patch.object(self.frappe, "get_all", return_value=quotations), patch.object(self.frappe.db, "exists", side_effect=exists), patch.object(self.frappe.db, "set_value") as save:
+                    sync_opportunity(doc)
+                    self.assertEqual(doc.status, expected)
+                    if current != expected:
+                        save.assert_called_once_with("Opportunity", "OPP-1", "status", expected)
+                    else:
+                        save.assert_not_called()
+
+    def test_opportunity_preserves_closed_and_standard_statuses(self):
+        from recover.opportunity_workflow import sync_opportunity
+        for status in ("Lost", "Closed", "Replied", "Converted"):
+            with self.subTest(status=status), patch.object(self.frappe.db, "sql", return_value=[Row(status=status)]), patch.object(self.frappe, "get_all", return_value=[]), patch.object(self.frappe.db, "exists", return_value=False), patch.object(self.frappe.db, "set_value") as save:
+                sync_opportunity(Row(doctype="Opportunity", name="OPP-1", status=status))
+                save.assert_not_called()
+
+    def test_sales_order_syncs_all_opportunities_from_quotations(self):
+        from recover import opportunity_workflow
+        self.frappe.get_doc.side_effect = lambda dt, name: Row(doctype=dt, name=name)
+        with patch.object(opportunity_workflow, "sync_opportunity") as sync:
+            opportunity_workflow.sync_sales_order_opportunities(Row(items=[
+                Row(prevdoc_docname="Q-1"), Row(prevdoc_docname="Q-2"), Row(prevdoc_docname="Q-1"),
+            ]))
+        self.assertEqual({call.args[0].name for call in sync.call_args_list}, {"Q-1", "Q-2"})
+        self.assertEqual(sync.call_count, 2)
 
     def test_workflow_stage_never_regresses(self):
         from recover.cost_workflow import update_cost_status
@@ -294,9 +403,13 @@ class CostWorkflowTests(unittest.TestCase):
             save.assert_not_called()
 
     def test_price_sheet_submission_marks_pricing_complete(self):
-        with patch("recover.cost_workflow.update_cost_status") as update:
-            self.make_price_sheet().on_submit()
+        quotation = Row(name="Q-1")
+        with patch("recover.cost_workflow.update_cost_status") as update, patch.object(self.pricing, "make_quotation", return_value=quotation) as create:
+            sheet = self.make_price_sheet()
+            sheet.on_submit()
             update.assert_called_once_with("COST-1", "Price Complete")
+            create.assert_called_once_with("PS-1")
+            self.assertEqual(sheet.quotation, "Q-1")
 
     def test_sales_order_resolves_multiple_quotation_sources(self):
         from recover.cost_workflow import sales_order_cost_sheets

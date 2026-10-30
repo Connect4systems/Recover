@@ -12,11 +12,20 @@
   "date",
   "opportunity",
   "cost_sheet",
+  "quotation",
   "section_break_awev",
   "items",
   "total"
  ],
  "fields": [
+  {
+   "fieldname": "quotation",
+   "fieldtype": "Link",
+   "label": "Quotation",
+   "options": "Quotation",
+   "read_only": 1,
+   "no_copy": 1
+  },
   {
    "fieldname": "opportunity",
    "fieldtype": "Link",

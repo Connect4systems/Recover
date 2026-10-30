@@ -14,8 +14,21 @@ mit
 4. Select a supplier. Suppliers must be enabled and have the item's group in the `Supplier.custom_supplier_item_group` child table. The filter reads the table's Item Group link field, including the existing `item_greoup` field. Migration creates the supplier table field only if it is missing.
 5. Submit the Cost Sheet. This automatically creates a draft **Price Sheet**, linked to the Cost Sheet and Opportunity, with Party Type, Party, and all cost items. It does not create a quotation.
    If linked to a Price Request, submission also applies that request's **Done** workflow action, moving **Pending Pricing** to **Pricing Complete** and submitting the request. The submitting user needs the workflow's **Purchase Manager** role and normal submission permissions. Already submitted requests in Pricing Complete are unchanged. Other request states or workflow/permission failures block Cost Sheet submission; the request, Cost Sheet, and Price Sheet changes share one transaction. This does not change the Cost Sheet's separate **Pending Price** status or automatically reopen requests when a Cost Sheet is cancelled.
-6. A sales user enters **Unit Profit**, an amount rather than a percentage. **Unit Selling Price = Unit Total Cost + Unit Profit**. Source cost details remain read-only and are checked against the submitted Cost Sheet.
-7. Submit the Price Sheet, then choose **Create > Quotation**. Review and save the quotation. It is linked to the opportunity and price sheet; every item's rate is its selling price, and its Cost (`custom_cost`) is the unit total cost.
+6. A sales user can edit each draft Price Sheet row's **Other Unit Cost** and **Unit Profit** (an amount rather than a percentage). Other Unit Cost initially comes from the Cost Sheet. **Unit Total Cost = Unit Price + Other Unit Cost**, and **Unit Selling Price = Unit Total Cost + Unit Profit**. Row values and the Total Selling Amount recalculate on edit and are recalculated on the server when saving or submitting. Unit Price and the other source details remain read-only and are restored from the submitted Cost Sheet. Editing Other Unit Cost does not change the Cost Sheet. Submitted Price Sheets remain locked.
+7. Submit the Price Sheet to automatically create and save a **draft Quotation**, which opens in the browser after successful submission. The Price Sheet's read-only Quotation link provides access later. Item codes, names, descriptions, quantities, UOMs, and selling prices as rates are copied. No pricing-cycle cost, other cost, total cost, supplier, or profit values are copied to Quotation rows. Migration removes the app's old Quotation Item Cost field and its cost-dependent margin display customizations. Document-level Opportunity, Price Sheet, and Cost Sheet links remain for workflow tracking. The submitting user needs normal Quotation creation permissions. A failure to save the Quotation rolls back Price Sheet submission. Repeated creation requests reuse the existing non-cancelled linked Quotation; cancelled quotations can be replaced. Existing submitted Price Sheets are not automatically given historical quotations during migration.
+
+Opportunity statuses follow the saved documents:
+
+| Trigger | Opportunity status |
+| --- | --- |
+| Opportunity created | Open |
+| Price Request moves to Pending Pricing via Request Pricing | Pending Cost |
+| Cost Sheet submitted and draft Price Sheet created | Pending Pricing |
+| Price Sheet submitted and draft Quotation saved | Pending Quotation |
+| Quotation submitted | Quotation |
+| Sales Order submitted | Converted |
+
+Statuses are recalculated from active linked documents on pricing events, Quotation events, Sales Order events, and Opportunity saves. Submitted sales orders and quotations take precedence over earlier pricing stages, so additional requests do not regress an advanced Opportunity. Cancellation falls back to the remaining active stage. Lost and Closed Opportunities are preserved; Opportunities without a pricing cycle retain standard ERPNext behavior. New status options are added alongside existing options during migration.
 
 The Cost Sheet's read-only **Status** follows this workflow:
 

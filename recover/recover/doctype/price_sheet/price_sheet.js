@@ -1,22 +1,27 @@
 frappe.ui.form.on("Price Sheet", {
- refresh(frm) {
-  if (frm.doc.docstatus === 1 && frappe.model.can_create("Quotation")) {
-   frm.add_custom_button(__("Quotation"), () => {
-    frappe.model.open_mapped_doc({
-     method: "recover.recover.doctype.price_sheet.price_sheet.make_quotation",
-     frm,
-    });
-   }, __("Create"));
+ on_submit(frm) {
+  if (frm.doc.quotation) {
+   frappe.set_route("Form", "Quotation", frm.doc.quotation);
   }
  },
 });
 
 frappe.ui.form.on("Price Sheet Item", {
  profit(frm, cdt, cdn) {
-  const row = locals[cdt][cdn];
-  frappe.model.set_value(cdt, cdn, "selling_price",
-   flt(flt(row.total_cost) + flt(row.profit), precision("selling_price", row)));
-  frm.set_value("total", (frm.doc.items || []).reduce(
-   (total, item) => total + flt(item.qty) * flt(item.selling_price), 0));
+  return update_price_sheet_row(frm, cdt, cdn);
+ },
+ other_cost(frm, cdt, cdn) {
+  return update_price_sheet_row(frm, cdt, cdn);
  },
 });
+
+async function update_price_sheet_row(frm, cdt, cdn) {
+ const row = locals[cdt][cdn];
+ const total_cost = flt(flt(row.price) + flt(row.other_cost), precision("total_cost", row));
+ await frappe.model.set_value(cdt, cdn, {
+  total_cost,
+  selling_price: flt(total_cost + flt(row.profit), precision("selling_price", row)),
+ });
+ await frm.set_value("total", (frm.doc.items || []).reduce(
+  (total, item) => total + flt(item.qty) * flt(item.selling_price), 0));
+}

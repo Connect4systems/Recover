@@ -8,6 +8,9 @@ class PriceSheet(Document):
 		from recover.cost_workflow import update_cost_status
 
 		update_cost_status(self.cost_sheet, "Price Complete")
+		quotation = make_quotation(self.name)
+		self.quotation = quotation.name
+		frappe.db.set_value("Price Sheet", self.name, "quotation", quotation.name)
 
 	def validate(self):
 		cost_sheet = frappe.get_doc("Cost sheet", self.cost_sheet)
@@ -26,8 +29,10 @@ class PriceSheet(Document):
 			if not source or row.cost_sheet_item in seen:
 				frappe.throw(frappe._("Each Price Sheet item must reference a unique Cost Sheet row."))
 			seen.add(row.cost_sheet_item)
-			for field in ("item", "item_name", "description", "uom", "qty", "price", "other_cost", "total_cost", "supplier"):
+			for field in ("item", "item_name", "description", "uom", "qty", "price", "supplier"):
 				row.set(field, source.get(field))
+			row.other_cost = flt(row.get("other_cost"))
+			row.total_cost = flt(flt(row.price) + row.other_cost, row.precision("total_cost"))
 			row.selling_price = flt(flt(row.total_cost) + flt(row.profit), row.precision("selling_price"))
 			self.total += flt(row.qty) * row.selling_price
 		if not source_rows or seen != set(source_rows):
@@ -44,6 +49,15 @@ def make_quotation(source_name, target_doc=None):
 		frappe.throw(frappe._("Submit the Price Sheet before creating a Quotation."))
 	if frappe.db.get_value("Cost sheet", price_sheet.cost_sheet, "docstatus") != 1:
 		frappe.throw(frappe._("The linked Cost Sheet must remain submitted."))
+	# Serialize retries so a Price Sheet has only one active quotation.
+	frappe.db.sql("select name from `tabPrice Sheet` where name=%s for update", (source_name,))
+	existing = frappe.db.get_value("Quotation", {
+		"custom_price_sheet": source_name, "docstatus": ["!=", 2],
+	}, "name")
+	if existing:
+		quotation = frappe.get_doc("Quotation", existing)
+		quotation.check_permission("read")
+		return quotation
 	opportunity = frappe.get_doc("Opportunity", price_sheet.opportunity)
 	quotation = frappe.new_doc("Quotation")
 	quotation.update({
@@ -67,10 +81,10 @@ def make_quotation(source_name, target_doc=None):
 			"uom": row.uom,
 			"qty": row.qty,
 			"rate": row.selling_price,
-			"custom_cost": row.total_cost,
 		})
 	quotation.set_missing_values()
 	for item, source in zip(quotation.items, price_sheet.items):
 		item.rate = source.selling_price
 	quotation.calculate_taxes_and_totals()
+	quotation.insert()
 	return quotation

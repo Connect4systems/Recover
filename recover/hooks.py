@@ -249,18 +249,25 @@ after_install = "recover.setup.setup_custom_fields"
 after_migrate = "recover.setup.setup_custom_fields"
 
 doc_events = {
+	"Opportunity": {
+		"on_update": "recover.opportunity_workflow.sync_opportunity",
+	},
+	**{doctype: {
+		event: "recover.opportunity_workflow.sync_opportunity"
+		for event in ("on_update", "on_submit", "on_cancel", "on_update_after_submit")
+	} for doctype in ("Price Request", "Cost sheet", "Price Sheet")},
 	"Material Request": {
 		"on_update": "recover.cost_workflow.sync_material_request_connections",
 		"on_update_after_submit": "recover.cost_workflow.sync_material_request_connections",
 	},
 	"Quotation": {
-		event: "recover.cost_workflow.sync_quotation"
+		event: ["recover.cost_workflow.sync_quotation", "recover.opportunity_workflow.sync_opportunity"]
 		for event in ("on_update", "on_submit", "on_cancel", "on_update_after_submit", "on_change")
 	},
 	"Sales Order": {
-		**{event: "recover.cost_workflow.sync_sales_order"
+		**{event: ["recover.cost_workflow.sync_sales_order", "recover.opportunity_workflow.sync_sales_order_opportunities"]
 		   for event in ("on_update", "on_cancel", "on_update_after_submit", "on_change")},
-		"on_submit": "recover.cost_workflow.create_material_request",
+		"on_submit": ["recover.cost_workflow.create_material_request", "recover.opportunity_workflow.sync_sales_order_opportunities"],
 	},
 	"Purchase Order": {
 		event: "recover.cost_workflow.sync_purchase_order"
