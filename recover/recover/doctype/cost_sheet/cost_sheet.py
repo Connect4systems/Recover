@@ -35,6 +35,10 @@ class Costsheet(Document):
 
 		if not self.opportunity or not self.items:
 			frappe.throw(frappe._("An Opportunity and at least one item are required to submit a Cost Sheet."))
+		if self.price_request:
+			from recover.recover.doctype.price_request.price_request import complete_price_request
+
+			complete_price_request(self.price_request)
 		if frappe.db.exists("Price Sheet", {"cost_sheet": self.name, "docstatus": ["!=", 2]}):
 			update_cost_status(self.name, "Pending Price")
 			return

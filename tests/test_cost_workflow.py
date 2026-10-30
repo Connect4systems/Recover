@@ -39,16 +39,19 @@ class CostWorkflowTests(unittest.TestCase):
         frappe.has_permission = Mock()
         mapper = ModuleType("frappe.model.mapper")
         mapper.get_mapped_doc = Mock()
+        workflow = ModuleType("frappe.model.workflow")
+        workflow.apply_workflow = Mock()
         document = ModuleType("frappe.model.document")
         document.Document = object
         utils = ModuleType("frappe.utils")
         utils.flt = lambda value, precision=None: round(float(value or 0), precision) if precision is not None else float(value or 0)
-        cls.modules = patch.dict(sys.modules, {"frappe": frappe, "frappe.model": ModuleType("frappe.model"), "frappe.model.document": document, "frappe.utils": utils, "frappe.model.mapper": mapper})
+        cls.modules = patch.dict(sys.modules, {"frappe": frappe, "frappe.model": ModuleType("frappe.model"), "frappe.model.document": document, "frappe.utils": utils, "frappe.model.mapper": mapper, "frappe.model.workflow": workflow})
         cls.modules.start()
         cls.controller = importlib.import_module("recover.recover.doctype.cost_sheet.cost_sheet")
         cls.pricing = importlib.import_module("recover.recover.doctype.price_sheet.price_sheet")
         cls.requests = importlib.import_module("recover.recover.doctype.price_request.price_request")
         cls.mapper = mapper
+        cls.workflow = workflow
         cls.frappe = frappe
 
     @classmethod
@@ -56,6 +59,7 @@ class CostWorkflowTests(unittest.TestCase):
         cls.modules.stop()
 
     def setUp(self):
+        self.workflow.apply_workflow.reset_mock(return_value=True, side_effect=True)
         self.frappe.get_doc.side_effect = None
         self.frappe.db.exists.reset_mock(return_value=True)
         self.frappe.db.exists.return_value = False
@@ -128,6 +132,56 @@ class CostWorkflowTests(unittest.TestCase):
         self.frappe.db.exists.return_value = True
         self.frappe.new_doc.reset_mock()
         self.sheet.on_submit()
+        self.frappe.new_doc.assert_not_called()
+
+    def test_request_done_action_submits_pending_request(self):
+        request = Row(docstatus=0, workflow_state="Pending Pricing", check_permission=Mock())
+        self.frappe.get_doc.return_value = request
+        self.workflow.apply_workflow.return_value = Row(docstatus=1, workflow_state="Pricing Complete")
+        self.requests.complete_price_request("PR-1")
+        self.workflow.apply_workflow.assert_called_once_with(request, "Done")
+        request.check_permission.assert_called_once_with("read")
+
+    def test_completed_request_is_not_submitted_again(self):
+        self.frappe.get_doc.return_value = Row(docstatus=1, workflow_state="Pricing Complete", check_permission=Mock())
+        self.requests.complete_price_request("PR-1")
+        self.workflow.apply_workflow.assert_not_called()
+
+    def test_request_in_other_states_blocks_completion(self):
+        for docstatus, state in [(0, "Draft"), (2, "Rejected"), (1, "Other")]:
+            with self.subTest(state=state):
+                self.frappe.get_doc.return_value = Row(docstatus=docstatus, workflow_state=state, check_permission=Mock())
+                with self.assertRaises(ValueError):
+                    self.requests.complete_price_request("PR-1")
+        self.workflow.apply_workflow.assert_not_called()
+
+    def test_request_workflow_permission_failure_propagates(self):
+        self.frappe.get_doc.return_value = Row(docstatus=0, workflow_state="Pending Pricing", check_permission=Mock())
+        self.workflow.apply_workflow.side_effect = PermissionError("Purchase Manager required")
+        with self.assertRaises(PermissionError):
+            self.requests.complete_price_request("PR-1")
+
+    def test_done_must_submit_request_as_pricing_complete(self):
+        self.frappe.get_doc.return_value = Row(docstatus=0, workflow_state="Pending Pricing", check_permission=Mock())
+        self.workflow.apply_workflow.return_value = Row(docstatus=0, workflow_state="Pricing Complete")
+        with self.assertRaises(ValueError):
+            self.requests.complete_price_request("PR-1")
+
+    def test_existing_price_sheet_still_completes_linked_request(self):
+        self.sheet.opportunity = "OPP-1"
+        self.sheet.price_request = "PR-1"
+        self.frappe.db.exists.return_value = True
+        with patch.object(self.requests, "complete_price_request") as complete:
+            self.sheet.on_submit()
+        complete.assert_called_once_with("PR-1")
+
+    def test_request_failure_stops_price_sheet_creation(self):
+        self.sheet.opportunity = "OPP-1"
+        self.sheet.price_request = "PR-1"
+        self.frappe.new_doc.reset_mock()
+        with patch.object(self.requests, "complete_price_request", side_effect=PermissionError):
+            with self.assertRaises(PermissionError):
+                self.sheet.on_submit()
         self.frappe.new_doc.assert_not_called()
 
     def test_supplier_filter_uses_custom_supplier_item_group_table(self):

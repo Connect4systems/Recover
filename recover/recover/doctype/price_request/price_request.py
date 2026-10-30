@@ -14,6 +14,22 @@ class PriceRequest(Document):
 			self.party = opportunity.party_name
 
 
+def complete_price_request(name):
+	"""Complete purchasing through the configured workflow in the caller's transaction."""
+	from frappe.model.workflow import apply_workflow
+
+	request = frappe.get_doc("Price Request", name)
+	request.check_permission("read")
+	if request.docstatus == 1 and request.get("workflow_state") == "Pricing Complete":
+		return
+	if request.docstatus != 0 or request.get("workflow_state") != "Pending Pricing":
+		frappe.throw(frappe._("Price Request must be Pending Pricing before submitting its Cost Sheet."))
+	# Keep workflow roles, conditions, submission hooks, and audit history intact.
+	completed = apply_workflow(request, "Done")
+	if completed.docstatus != 1 or completed.get("workflow_state") != "Pricing Complete":
+		frappe.throw(frappe._("The Price Request Done action must submit it as Pricing Complete."))
+
+
 @frappe.whitelist()
 def make_price_request(source_name, target_doc=None):
 	return get_mapped_doc("Opportunity", source_name, {
